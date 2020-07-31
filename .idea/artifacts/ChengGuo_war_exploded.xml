@@ -7,6 +7,14 @@
         <element id="directory" name="classes">
           <element id="module-output" name="ChengGuo" />
         </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="commons-dbutils-1.7" />
+          <element id="library" level="project" name="commons-dbcp2-2.7.0" />
+          <element id="library" level="project" name="mysql-connector-java-8.0.19" />
+          <element id="library" level="project" name="commons-logging-1.2" />
+          <element id="library" level="project" name="commons-pool2-2.8.0" />
+          <element id="library" level="project" name="jstl-1.2" />
+        </element>
       </element>
     </root>
   </artifact>
