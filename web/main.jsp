@@ -13,20 +13,11 @@
 <body>
     欢迎，
     <%
-        Cookie[] cookies=request.getCookies();
-        String id="-1";
-        for(int i=0;i<cookies.length;i++){
-            if("id".equals(cookies[i].getName())) {
-                id=cookies[i].getValue();
-            }
-        }
-        User loginUser=null;
-        if(id!="-1") {
-            loginUser=(User)session.getAttribute(id);
-        }
-        if(loginUser!=null) {
+        User loginUser;
+        if(session.getAttribute("loginUser")!=null) {
+            loginUser=(User)session.getAttribute("loginUser");
             out.write(loginUser.getUserName());
-        } else {
+        }else {
             out.write("游客，<a href=\"index.jsp\">点击这里登录</a>");
         }
     %>

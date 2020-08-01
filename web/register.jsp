@@ -31,6 +31,15 @@
     </script>
 </head>
 <body>
+<%
+    Cookie[] cookies=request.getCookies();
+    String registerUserName="";
+    for(int i=0;i<cookies.length;i++){
+        if("registerUserName".equals(cookies[i].getName())) {
+            registerUserName=cookies[i].getValue();
+        }
+    }
+%>
 <form action="register" method="POST">
     <table align="center" border="0" width="300" height="300" cellspacing="0">
         <tr></tr>
@@ -38,10 +47,18 @@
         <tr>
             <th colspan="5">注册</th>
         </tr>
-        <tr></tr>
+        <tr>
+            <th colspan="5">
+            <%
+            if(!registerUserName.equals("")){
+                out.write("用户名已存在");
+            }
+            %>
+            </th>
+        </tr>
         <tr>
             <th colspan="2"> 用户名:</th>
-            <th colspan="3"><input type="text" required name="userName" value=""/> </th>
+            <th colspan="3"><input type="text" required name="userName" value="<%out.write(registerUserName);%>"/> </th>
         </tr>
         <tr>
             <th colspan="2"> 密码:</th>

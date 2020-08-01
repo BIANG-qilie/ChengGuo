@@ -6,5 +6,7 @@ import com.biang.www.po.User;
  * @author BIANG
  */
 public interface IUserService {
-    public User register(User user) throws Exception;
+    public User login(User user) throws Exception;
+
+    public boolean register(User user) throws Exception;
 }

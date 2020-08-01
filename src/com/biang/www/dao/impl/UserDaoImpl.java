@@ -24,13 +24,13 @@ public class UserDaoImpl implements IUserDao {
     @Override
     public User queryByUserName(String userName) throws Exception {
         QueryRunner queryRunner=new QueryRunner(JDBCUtils.getDataSourceWIthDBCPByProperties());
-        String sql="select * from user where user_name=?";
+        String sql="select * from user where userName=?";
         return queryRunner.query(sql,new BeanHandler<User>(User.class),userName);
     }
     @Override
     public User queryByUser(User user) throws Exception {
         QueryRunner queryRunner=new QueryRunner(JDBCUtils.getDataSourceWIthDBCPByProperties());
-        String sql="select * from user where user_name=? and password=?";
+        String sql="select * from user where userName=? and password=?";
         return queryRunner.query(sql,new BeanHandler<User>(User.class),user.getUserName(),user.getPassword());
     }
 }

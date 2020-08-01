@@ -9,7 +9,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>选课系统首页</title>
+    <title>成果交易系统</title>
     <script type="text/javascript">
         function login() {
             window.location.href="login.jsp";
@@ -22,6 +22,15 @@
     </script>
 </head>
 <body>
+<%
+    Cookie[] cookies=request.getCookies();
+    for(Cookie cookie:cookies){
+        if("registerUserName".equals(cookie.getName())) {
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+        }
+    }
+%>
 <table align="center" border="0" width="300" height="300" cellspacing="0">
     <tr></tr>
     <tr>

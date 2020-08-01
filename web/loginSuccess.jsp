@@ -10,14 +10,7 @@
 <html>
 <head>
     <title>登录成功</title>
-    <script type="text/javascript" >
-        function sleep(delay) {
-            var start = (new Date()).getTime();
-            while((new Date()).getTime() - start < delay) {
-                continue;
-            }
-        }
-    </script>
+    <script type="text/javascript" src="js/sleep.js"></script>
 </head>
 <body>
     登录成功，正在为你跳转.
@@ -25,9 +18,6 @@
         <script>sleep(500);</script>
         .
     </c:forEach>
-    <%
-        session.getAttribute("");
-    %>
     <%
         response.setHeader("refresh","3;url=main.jsp");
     %>

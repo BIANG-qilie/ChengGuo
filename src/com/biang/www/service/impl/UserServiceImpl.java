@@ -11,8 +11,17 @@ import com.biang.www.service.IUserService;
 public class UserServiceImpl implements IUserService {
     IUserDao userDao=new UserDaoImpl();
     @Override
-    public User register(User user) throws Exception {
+    public User login(User user) throws Exception {
         return userDao.queryByUser(user);
+    }
+
+    @Override
+    public boolean register(User user) throws Exception {
+        if(userDao.queryByUserName(user.getUserName())!=null) {
+            return false;
+        }
+        user.setLevel(1);
+        return userDao.insert(user);
     }
 }
 
