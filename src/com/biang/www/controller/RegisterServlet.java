@@ -30,7 +30,8 @@ public class RegisterServlet extends HttpServlet {
                 //正常注册成功
                 Cookie[] cookies=request.getCookies();
                 for(Cookie cookie:cookies){
-                    if("registerUserName".equals(cookie.getName())) {
+                    if("registerUserName".equals(cookie.getName())
+                            ||"registerTime".equals(cookie.getName())){
                         cookie.setMaxAge(0);
                         response.addCookie(cookie);
                     }

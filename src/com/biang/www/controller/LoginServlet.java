@@ -37,7 +37,7 @@ public class LoginServlet extends HttpServlet {
                     response.addCookie(cookies[i]);
                 }
                 response.addCookie(new Cookie("userName", loginUser.getUserName()));
-                if(rememberPassword.length>0) {
+                if(rememberPassword!=null) {
                     response.addCookie(new Cookie("password", loginUser.getPassword()));
                 }
                 request.getRequestDispatcher("main.jsp").forward(request, response);

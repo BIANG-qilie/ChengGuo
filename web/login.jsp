@@ -15,31 +15,7 @@
     <title>登录</title>
     <script type="text/javascript"src="js/returnToHome.js"></script>
     <script type="text/javascript" src="js/jquery-3.3.1.js" ></script>
-    <script type="text/javascript" >
-        function reloadCheckImg()
-        {
-            $("img").attr("src", "img.jsp?t="+(new Date().getTime()));  //<img src="...">
-        }
-        $(document).ready(function(){
-            $("#form").submit(function(){
-                var $checkcode = $("#checkcodeId").val();
-                return $.post(
-                    "CheckCode",//服务端地址
-                    "checkcode="+$checkcode ,
-                    function(result){
-                        if(result=="false"){
-                            alert("验证码出错");
-                            reloadCheckImg();
-                            return false;
-                        }else{
-                            return true;
-                        }
-                    }
-                );
-
-            });
-        });
-    </script>
+    <script type="text/javascript" src="js/checkCode.js"></script>
 </head>
 <body>
 <%
@@ -89,7 +65,8 @@
             <th colspan="2"> 密码:</th>
             <th colspan="3"><input type="password" required name="password" value="<%out.write(password);%>"/> </th>
         </tr>
-        <%if(loginTime>5) {
+        <%
+            if(loginTime>5) {
             out.write("<tr>\n" +
                 "            <th colspan=\"5\">\n" +
                 "                验证码：\n" +
@@ -98,7 +75,14 @@
                 "                <a href=\"javascript:reloadCheckImg();\"> <img src=\"img.jsp\"/></a>\n" +
                 "            </th>\n" +
                 "        </tr>");
-        }
+            }else{
+                out.write("<tr>\n" +
+                    "            <th>\n" +
+                    "                <input type=\"hidden\" name=\"checkcode\" id=\"checkcodeId\" value=\"checkCodePass\"/>\n" +
+                    "            </th>\n" +
+                    "        </tr>");
+
+            }
         %>
         <tr>
             <th colspan="5">
@@ -107,7 +91,7 @@
         </tr>
         <tr>
             <th colspan="5">
-                <input type="submit" value="登录" style="width: 80px">
+                <input type="submit" value="登录" style="width: 80px" onclick="return checkCode()">
             </th>
         </tr>
 
