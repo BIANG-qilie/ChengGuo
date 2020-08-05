@@ -43,7 +43,7 @@
     loginTimeCookie.setMaxAge(3000);
     response.addCookie(loginTimeCookie);
 %>
-<form action="login" method="POST" id="form">
+<form action="user" method="POST" id="form">
     <table align="center" border="0" width="300" height="<%=((loginTime>5)?350:350)%>" cellspacing="0">
         <tr></tr>
         <tr></tr>
@@ -84,6 +84,11 @@
 
             }
         %>
+        <tr>
+            <th>
+                <input type="hidden" name="method"  value="login"/>
+            </th>
+        </tr>
         <tr>
             <th colspan="5">
                 <input name="rememberPassword" type="checkbox" <%=((password.equals(""))?"":"checked")%> value="remember" />记住密码

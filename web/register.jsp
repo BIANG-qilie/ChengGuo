@@ -49,7 +49,7 @@
     registerTimeCookie.setMaxAge(3000);
     response.addCookie(registerTimeCookie);
 %>
-<form action="register" method="POST">
+<form action="user" method="POST">
     <table align="center" border="0" width="300" height="<%=((registerTime>5)?350:350)%>" cellspacing="0">
         <tr></tr>
         <tr></tr>
@@ -94,6 +94,11 @@
 
         }
         %>
+        <tr>
+            <th>
+                <input type="hidden" name="method"  value="register"/>
+            </th>
+        </tr>
         <tr>
             <th colspan="5">
                 <input type="submit" value="注册" style="width: 80px" onclick="return (check()&&checkCode())">

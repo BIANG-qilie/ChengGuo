@@ -8,16 +8,17 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
- * @author dell
+ * @author BIANG
  */
-@WebServlet("/login")
-public class LoginServlet extends HttpServlet {
+@WebServlet("/user")
+public class UserServlet extends BaseServlet {
     IUserService userService=new UserServiceImpl();
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void login(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
         String userName=request.getParameter("userName");
         String password=request.getParameter("password");
         String[] rememberPassword=request.getParameterValues("rememberPassword");
@@ -53,9 +54,34 @@ public class LoginServlet extends HttpServlet {
         response.addCookie(new Cookie("errorUserName", user.getUserName()));
         response.sendRedirect(request.getContextPath() + "/login.jsp");
     }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
+    public void register(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+        String userName=request.getParameter("userName");
+        String password=request.getParameter("password");
+        User user=new User();
+        user.setUserName(userName);
+        user.setPassword(password);
+        try {
+            if(userService.register(user)) {
+                //正常注册成功
+                Cookie[] cookies=request.getCookies();
+                for(Cookie cookie:cookies){
+                    if("registerUserName".equals(cookie.getName())
+                            ||"registerTime".equals(cookie.getName())){
+                        cookie.setMaxAge(0);
+                        response.addCookie(cookie);
+                    }
+                }
+                request.getRequestDispatcher("registerSuccess.jsp").forward(request, response);
+                return;
+            }else{//异常 用户名重复
+                response.addCookie(new Cookie("registerUserName",userName));
+                response.sendRedirect(request.getContextPath() + "/register.jsp");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
