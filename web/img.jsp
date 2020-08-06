@@ -2,6 +2,7 @@
 <%@ page import="java.util.Random" %>
 <%@ page import="java.awt.image.BufferedImage" %>
 <%@ page import="javax.imageio.ImageIO" %>
+<%@ page import="com.biang.www.util.CommonUtil" %>
 <%@ page contentType="image/jpeg;charset=UTF-8" language="java" %>
 
 <%!
@@ -11,11 +12,6 @@
             int green = ran.nextInt(256) ;
             int blue = ran.nextInt(256) ;
             return new Color(red,green,blue) ;//red green blue  0-255
-        }
-        public String getNum()
-        {
-            int ran = (int)( Math.random()*9000) +1000 ;
-            return String.valueOf(ran) ;
         }
 %>
 <%
@@ -43,7 +39,7 @@
     graphics.setFont(new Font("seif",Font.BOLD,20));
     //绘制验证码
     graphics.setColor(Color.BLACK);
-    String checkCode = getNum() ; //2 1 3 4
+    String checkCode = CommonUtil.getRandomNum() ; //2 1 3 4
     StringBuffer sb = new StringBuffer() ;
     for(int i=0;i<checkCode.length();i++){
         sb.append(checkCode.charAt(i)+" "  )  ;//验证码的每一位数字

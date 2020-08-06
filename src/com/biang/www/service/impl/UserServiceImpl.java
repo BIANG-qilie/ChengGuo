@@ -12,7 +12,7 @@ public class UserServiceImpl implements IUserService {
     IUserDao userDao=new UserDaoImpl();
     @Override
     public User login(User user) throws Exception {
-        return userDao.queryByUser(user);
+        return userDao.queryByUserNameAndPassword(user);
     }
 
     @Override
@@ -20,8 +20,22 @@ public class UserServiceImpl implements IUserService {
         if(userDao.queryByUserName(user.getUserName())!=null) {
             return false;
         }
-        user.setLevel(1);
         return userDao.insert(user);
+    }
+
+    @Override
+    public User isExist(User user) {
+        try {
+            return userDao.queryByUserName(user.getUserName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public User verifyEmail(User user) throws Exception {
+        return userDao.queryByUserNameAndEmail(user);
     }
 }
 

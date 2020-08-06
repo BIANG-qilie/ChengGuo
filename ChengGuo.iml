@@ -27,8 +27,10 @@
     <orderEntry type="library" exported="" name="mysql-connector-java-8.0.19" level="project" />
     <orderEntry type="library" exported="" name="commons-dbutils-1.7" level="project" />
     <orderEntry type="library" exported="" name="commons-dbcp2-2.7.0" level="project" />
-    <orderEntry type="library" name="commons-logging-1.2" level="project" />
-    <orderEntry type="library" name="commons-pool2-2.8.0" level="project" />
-    <orderEntry type="library" name="jstl-1.2" level="project" />
+    <orderEntry type="library" exported="" name="commons-logging-1.2" level="project" />
+    <orderEntry type="library" exported="" name="commons-pool2-2.8.0" level="project" />
+    <orderEntry type="library" exported="" name="jstl-1.2" level="project" />
+    <orderEntry type="library" exported="" name="activation-1.1.1" level="project" />
+    <orderEntry type="library" exported="" name="mail" level="project" />
   </component>
 </module>

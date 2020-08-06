@@ -3,11 +3,15 @@ package com.biang.www.controller;
 import com.biang.www.po.User;
 import com.biang.www.service.IUserService;
 import com.biang.www.service.impl.UserServiceImpl;
+import com.biang.www.util.CommonUtil;
+import com.biang.www.util.EmailSender;
 
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 /**
  * @author BIANG
@@ -60,9 +64,11 @@ public class UserServlet extends BaseServlet {
         response.setContentType("text/html; charset=UTF-8");
         String userName=request.getParameter("userName");
         String password=request.getParameter("password");
+        String email=request.getParameter("email");
         User user=new User();
         user.setUserName(userName);
         user.setPassword(password);
+        user.setEmail(email);
         try {
             if(userService.register(user)) {
                 //正常注册成功
@@ -84,4 +90,67 @@ public class UserServlet extends BaseServlet {
             e.printStackTrace();
         }
     }
+    public void forgetPassword(HttpServletRequest request, HttpServletResponse response)
+            throws IOException{
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+        String userName=request.getParameter("userName");
+        User user=new User();
+        user.setUserName(userName);
+        if(userService.isExist(user)!=null){
+            response.addCookie(new Cookie("forgetPasswordUserName",userName));
+            response.sendRedirect(request.getContextPath() + "/forgetPasswordEmail.jsp");
+        }else{
+            response.addCookie(new Cookie("errorForgetPasswordUserName",userName));
+            response.sendRedirect(request.getContextPath() + "/forgetPassword.jsp");
+        }
+
+    }
+    public void forgetPasswordEmail(HttpServletRequest request, HttpServletResponse response)
+            throws IOException{
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+        Cookie[] cookies=request.getCookies();
+        String userName=null;
+        for(Cookie cookie:cookies){
+            if("forgetPasswordUserName".equals(cookie.getName())){
+                userName=cookie.getValue();
+            }
+        }
+        String email=request.getParameter("email");
+        User user=new User();
+        user.setUserName(userName);
+        user.setEmail(email);
+        User forgetPasswordUser= null;
+        try {
+            forgetPasswordUser = userService.verifyEmail(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(forgetPasswordUser!=null){
+            String checkCode= CommonUtil.getRandomNum();
+            HttpSession session=request.getSession();
+            session.setAttribute("checkCode", checkCode);
+            //发送邮件
+            EmailSender emailSender=new EmailSender();
+            emailSender.Initialization(forgetPasswordUser,checkCode);
+            try {
+                emailSender.send();
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            } catch (GeneralSecurityException e) {
+                e.printStackTrace();
+            }
+            try {
+                request.getRequestDispatcher("forgetPasswordCheckCode.jsp").forward(request, response);
+            } catch (ServletException e) {
+                e.printStackTrace();
+            }
+        }else{
+            response.addCookie(new Cookie("errorForgetPasswordEmail",email));
+            response.sendRedirect(request.getContextPath() + "/forgetPasswordEmail.jsp");
+        }
+
+    }
+
 }

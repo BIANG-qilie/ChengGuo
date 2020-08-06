@@ -15,8 +15,8 @@ public class UserDaoImpl implements IUserDao {
     @Override
     public boolean insert(User user) throws Exception {
         QueryRunner queryRunner=new QueryRunner(JDBCUtils.getDataSourceWIthDBCPByProperties());
-        String sql="INSERT INTO user VALUES(default,?,?,?)";
-        if(queryRunner.update(sql, user.getUserName(),user.getPassword(),user.getLevel())>0) {
+        String sql="INSERT INTO user VALUES(default,?,?,default,?)";
+        if(queryRunner.update(sql, user.getUserName(),user.getPassword(),user.getEmail())>0) {
             return true;
         }
         return false;
@@ -28,9 +28,16 @@ public class UserDaoImpl implements IUserDao {
         return queryRunner.query(sql,new BeanHandler<User>(User.class),userName);
     }
     @Override
-    public User queryByUser(User user) throws Exception {
+    public User queryByUserNameAndPassword(User user) throws Exception {
         QueryRunner queryRunner=new QueryRunner(JDBCUtils.getDataSourceWIthDBCPByProperties());
         String sql="select * from user where userName=? and password=?";
         return queryRunner.query(sql,new BeanHandler<User>(User.class),user.getUserName(),user.getPassword());
+    }
+
+    @Override
+    public User queryByUserNameAndEmail(User user) throws Exception {
+        QueryRunner queryRunner=new QueryRunner(JDBCUtils.getDataSourceWIthDBCPByProperties());
+        String sql="select * from user where userName=? and email=?";
+        return queryRunner.query(sql,new BeanHandler<User>(User.class),user.getUserName(),user.getEmail());
     }
 }

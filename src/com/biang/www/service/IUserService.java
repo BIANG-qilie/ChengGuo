@@ -9,4 +9,8 @@ public interface IUserService {
     public User login(User user) throws Exception;
 
     public boolean register(User user) throws Exception;
+
+    User isExist(User user);
+
+    User verifyEmail(User user) throws Exception;
 }

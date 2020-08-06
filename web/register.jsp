@@ -49,8 +49,8 @@
     registerTimeCookie.setMaxAge(3000);
     response.addCookie(registerTimeCookie);
 %>
-<form action="user" method="POST">
-    <table align="center" border="0" width="300" height="<%=((registerTime>5)?350:350)%>" cellspacing="0">
+<form action="user" method="GET">
+    <table align="center" border="0" width="300" height="<%=((registerTime>5)?370:320)%>" cellspacing="0">
         <tr></tr>
         <tr></tr>
         <tr>
@@ -77,6 +77,10 @@
             <th colspan="2"> 再次输入密码:</th>
             <th colspan="3"><input type="password" required name="password" value=""/> </th>
         </tr>
+        <tr>
+            <th colspan="2"> 邮箱:</th>
+            <th colspan="3"><input type="text" required name="email" value=""/> </th>
+        </tr>
         <%if(registerTime>5) {
             out.write("<tr>\n" +
                     "            <th colspan=\"5\">\n" +
@@ -101,7 +105,7 @@
         </tr>
         <tr>
             <th colspan="5">
-                <input type="submit" value="注册" style="width: 80px" onclick="return (check()&&checkCode())">
+                <input type="submit" value="注册" style="width: 80px" onclick="return checkCode()">
             </th>
         </tr>
     </table>

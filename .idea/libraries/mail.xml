@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="mail">
+    <CLASSES>
+      <root url="jar://E:/JAVA/jar包/javamail/javamail1_4_6/javamail-1.4.6/mail.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -36,6 +36,14 @@ public class User {
         this.userId = userId;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public User(int userId, String userName, String password, int level) {
         this.userId = userId;
         this.userName = userName;
@@ -44,8 +52,18 @@ public class User {
     }
 
     public User(){};
+
+    public User(int userId, String userName, String password, String email, int level) {
+        this.userId = userId;
+        this.userName = userName;
+        this.password = password;
+        this.email = email;
+        this.level = level;
+    }
+
     private int userId;
     private String userName;
     private String password;
+    private String email;
     private int level;
 }
