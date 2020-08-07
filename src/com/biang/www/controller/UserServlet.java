@@ -130,7 +130,8 @@ public class UserServlet extends BaseServlet {
         if(forgetPasswordUser!=null){
             String checkCode= CommonUtil.getRandomNum();
             HttpSession session=request.getSession();
-            session.setAttribute("checkCode", checkCode);
+            session.setAttribute("CKECKCODE", checkCode);
+            session.setAttribute("forgetPasswordUser",forgetPasswordUser);
             //发送邮件
             EmailSender emailSender=new EmailSender();
             emailSender.Initialization(forgetPasswordUser,checkCode);
@@ -149,6 +150,21 @@ public class UserServlet extends BaseServlet {
         }else{
             response.addCookie(new Cookie("errorForgetPasswordEmail",email));
             response.sendRedirect(request.getContextPath() + "/forgetPasswordEmail.jsp");
+        }
+
+    }
+    public void changePassword(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        String newPassword=request.getParameter("newPassword");
+        HttpSession session=request.getSession();
+        User forgetPasswordUser= (User) session.getAttribute("forgetPasswordUser");
+        if(userService.changePassword(forgetPasswordUser,newPassword)){
+            //修改成功
+            response.sendRedirect(request.getContextPath() + "/changePasswordSuccess.jsp");
+        }else {
+            //修改失败
+            session.setAttribute("changePasswordError",forgetPasswordUser);
+            request.getRequestDispatcher("changePassword.jsp").forward(request, response);
         }
 
     }

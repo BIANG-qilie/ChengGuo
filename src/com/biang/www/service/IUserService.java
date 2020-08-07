@@ -10,7 +10,9 @@ public interface IUserService {
 
     public boolean register(User user) throws Exception;
 
-    User isExist(User user);
+    public User isExist(User user);
 
-    User verifyEmail(User user) throws Exception;
+    public User verifyEmail(User user) throws Exception;
+
+    public boolean changePassword(User forgetPasswordUser, String newPassword) throws Exception;
 }

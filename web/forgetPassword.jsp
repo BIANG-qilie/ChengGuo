@@ -22,7 +22,18 @@
             </tr>
             <th colspan="5">
                 <%
-
+                    String errorForgetPasswordUserName=null;
+                    Cookie[] cookies=request.getCookies();
+                    for(Cookie cookie:cookies){
+                        if("errorForgetPasswordUserName".equals(cookie.getName())){
+                            errorForgetPasswordUserName=cookie.getValue();
+                            cookie.setMaxAge(0);
+                            response.addCookie(cookie);
+                        }
+                    }
+                    if(errorForgetPasswordUserName!=null){
+                        out.write("用户名不存在");
+                    }
                 %>
             </th>
             <tr>

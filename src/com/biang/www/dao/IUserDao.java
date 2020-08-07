@@ -12,4 +12,6 @@ public interface IUserDao {
     public User queryByUserName(String userName) throws Exception;
     public User queryByUserNameAndPassword(User user) throws Exception;
     public User queryByUserNameAndEmail(User user) throws Exception;
+
+    public boolean updatePassword(User user, String newPassword) throws Exception;
 }

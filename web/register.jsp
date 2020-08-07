@@ -105,7 +105,7 @@
         </tr>
         <tr>
             <th colspan="5">
-                <input type="submit" value="注册" style="width: 80px" onclick="return checkCode()">
+                <input type="submit" value="注册" style="width: 80px" onclick="return check()&&checkCode()">
             </th>
         </tr>
     </table>

@@ -1,4 +1,10 @@
-<%@ page import="com.biang.www.util.EmailSender" %>
+<%--
+  Created by IntelliJ IDEA.
+  User: dell
+  Date: 2020/8/7
+  Time: 13:07
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -8,12 +14,7 @@
     <script type="text/javascript" src="js/checkCode.js"></script>
 </head>
 <body>
-<%--<%
-    EmailSender emailSender=new EmailSender();
-    emailSender.textInitialization();
-    emailSender.send();
-%>--%>
-<form action="user" method="GET">
+<form action="changePassword.jsp" method="GET">
     <table align="center" border="0" width="300" height="300" cellspacing="0">
         <tr></tr>
         <tr></tr>
@@ -23,20 +24,11 @@
         <th colspan="5">
             <%
                 String userName="用户名异常";
-                String errorForgetPasswordEmail=null;
                 Cookie[] cookies=request.getCookies();
                 for(Cookie cookie:cookies){
                     if("forgetPasswordUserName".equals(cookie.getName())){
                         userName=cookie.getValue();
                     }
-                    if("errorForgetPasswordEmail".equals(cookie.getName())){
-                        errorForgetPasswordEmail=cookie.getValue();
-                        cookie.setMaxAge(0);
-                        response.addCookie(cookie);
-                    }
-                }
-                if(errorForgetPasswordEmail!=null){
-                    out.write("邮箱输入错误");
                 }
             %>
         </th>
@@ -45,20 +37,12 @@
             <th colspan="3"><%=userName%></th>
         </tr>
         <tr>
-            <th colspan="2"> 注册时邮箱:</th>
-            <th colspan="3"><input type="text" required name="email" value=""/> </th>
+            <th colspan="5"> 已向您的注册邮箱发送验证码，</th>
         </tr>
         <tr>
             <th colspan="5">
                 验证码：
                 <input type="text" name="checkcode" id="checkcodeId" size="4"  />
-                <!-- 验证码-->
-                <a href="javascript:reloadCheckImg();"> <img src="img.jsp"/></a>
-            </th>
-        </tr>
-        <tr>
-            <th>
-                <input type="hidden" name="method"  value="forgetPasswordEmail"/>
             </th>
         </tr>
         <tr>
@@ -75,4 +59,3 @@
 </table>
 </body>
 </html>
-

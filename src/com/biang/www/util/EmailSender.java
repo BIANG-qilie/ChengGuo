@@ -86,6 +86,7 @@ package com.biang.www.util;
 import com.biang.www.po.User;
 import com.sun.mail.util.MailSSLSocketFactory;
 
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -239,5 +240,19 @@ public class EmailSender {
                 "biang<br/>" +
                 "<a href=\"http://localhost:8080/ChengGuo_war_exploded/\">成果交易系统主页</a>";
         mailHost="smtp.qq.com";
+    }
+    public void ErrorReport(String errorContent,Object object) throws GeneralSecurityException, MessagingException {
+        mailFrom="2947296752@qq.com";
+        mailFromPassword="lxakfuebeogoddif";
+        mailTo="921097712@qq.com";
+        mailTittle="成果交易系统找回密码";
+        mailText="biang，您好！<br/>" +
+                "项目发生错误<br/>" +
+                errorContent+"<br/>" +
+                ((object!=null)?(object.toString()):"")+"<br/>" +
+                "biang<br/>" +
+                "<a href=\"http://localhost:8080/ChengGuo_war_exploded/\">成果交易系统主页</a>";
+        mailHost="smtp.qq.com";
+        send();
     }
 }

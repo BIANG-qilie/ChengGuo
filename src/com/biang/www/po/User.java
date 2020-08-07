@@ -66,4 +66,13 @@ public class User {
     private String password;
     private String email;
     private int level;
+    @Override
+    public String toString(){
+        String string="用户ID:"+userId+" \n"+
+                "用户名:"+userName+" \n"+
+                "密码:"+password+" \n"+
+                "用户等级:"+level+" \n"+
+                "用户邮箱:"+email+" \n";
+        return string;
+    }
 }

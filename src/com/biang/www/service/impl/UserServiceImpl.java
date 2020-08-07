@@ -37,5 +37,10 @@ public class UserServiceImpl implements IUserService {
     public User verifyEmail(User user) throws Exception {
         return userDao.queryByUserNameAndEmail(user);
     }
+
+    @Override
+    public boolean changePassword(User user, String newPassword) throws Exception {
+        return userDao.updatePassword(user,newPassword);
+    }
 }
 
