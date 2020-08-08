@@ -4,6 +4,11 @@ package com.biang.www.po;
  * @author Biang
  */
 public class User {
+    public static final int COMMON_USER=1;
+    public static final int ENTERPRISE_USER=2;
+    public static final int MANAGER=3;
+
+
     public String getUserName() {
         return userName;
     }
@@ -51,7 +56,7 @@ public class User {
         this.level = level;
     }
 
-    public User(){};
+    public User(){}
 
     public User(int userId, String userName, String password, String email, int level) {
         this.userId = userId;
@@ -68,11 +73,10 @@ public class User {
     private int level;
     @Override
     public String toString(){
-        String string="用户ID:"+userId+" \n"+
+        return "用户ID:"+userId+" \n"+
                 "用户名:"+userName+" \n"+
                 "密码:"+password+" \n"+
                 "用户等级:"+level+" \n"+
                 "用户邮箱:"+email+" \n";
-        return string;
     }
 }

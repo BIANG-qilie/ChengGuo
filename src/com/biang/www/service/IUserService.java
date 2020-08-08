@@ -6,13 +6,17 @@ import com.biang.www.po.User;
  * @author BIANG
  */
 public interface IUserService {
-    public User login(User user) throws Exception;
+    User login(User user) throws Exception;
 
-    public boolean register(User user) throws Exception;
+    boolean register(User user) throws Exception;
 
-    public User isExist(User user);
+    User isUserNameExist(User user) throws Exception;
 
-    public User verifyEmail(User user) throws Exception;
+    User verifyEmail(User user) throws Exception;
 
-    public boolean changePassword(User forgetPasswordUser, String newPassword) throws Exception;
+    boolean changePassword(User forgetPasswordUser, String newPassword) throws Exception;
+
+    User isEmailExist(User user) throws Exception;
+
+    User getUserByUserId(int loginUserId) throws Exception;
 }

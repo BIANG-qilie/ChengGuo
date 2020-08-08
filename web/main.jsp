@@ -1,4 +1,10 @@
-<%@ page import="com.biang.www.po.User" %><%--
+<%@ page import="com.biang.www.po.User" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.biang.www.po.Demand" %>
+<%@ page import="com.biang.www.service.IEnterpriseService" %>
+<%@ page import="com.biang.www.service.impl.EnterpriseServiceImpl" %>
+<%@ page import="com.biang.www.controller.DemandServlet" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%><%--
   Created by IntelliJ IDEA.
   User: dell
   Date: 2020/7/31
@@ -9,150 +15,128 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <script type='text/javascript'>
-        function selectSubject(){
-            var selectObj=document.getElementsByName("subjectSelect");
-            if(selectObj[0].value==0)
-                return false;
-        }
-    </script>
-    <script type='text/javascript'>
-        function editSubject(){
-            window.location.href="editSubject";
-        }
-    </script>
-    <script type="text/javascript">
-        function manage() {
-            window.location.href="managerSubject";
-        }
-    </script>
-    <script type='text/javascript'>
-        function faculty() {
-            window.location.href="facultyManage";
-        }
-    </script>
     <title>成果交易系统</title>
+    <script type="text/javascript" src="js/jquery-3.3.1.js"></script>
+    <script type="text/javascript">
+        function pageChange(page){
+            if(page<1)
+                page=1;
+            $.get("demand",
+                {
+                    method:"pageChange",
+                    pageNumber:page ,
+                },
+                function(){
+                window.location.href="demand?method=reloadDemand";
+            });
+        }
+    </script>
+
 </head>
 <body>
-    欢迎，
-    <%
-        User loginUser;
-        if(session.getAttribute("loginUser")!=null) {
-            loginUser=(User)session.getAttribute("loginUser");
-            out.write(loginUser.getUserName());
-        }else {
-            out.write("游客，<a href=\"index.jsp\">点击这里登录</a>");
-        }
-    %>
-    <table align="center" border="1" width="800" height="60" cellspacing="0" id="tableTitle">
-        <tr>
-            <th colspan="8">
-                <font color="blue" face="楷体" size="7">选课系统</font>
-            </th>
-        </tr>
-    </table>
-    <table align="center" border="1" width="800" height="180" cellspacing="0" id="table01">
-        <tr>
-            <th>课程id</th>
-            <th>课程名</th>
-            <th>上课日</th>
-            <th>上课时间</th>
-            <th>下课时间</th>
-            <th>开始选课时间</th>
-            <th>结束选课时间</th>
-            <th>选课</th>
-        </tr>
-        <tr>              <th colspan="8">共找到3条课程</th>          </tr>
-        <tr>
-            <td align="center">1</td>
-            <td align="center">高等数学</td>
-            <td align="center">星期一</td>
-            <td align="center">14:40:00</td>
-            <td align="center">16:15:00</td>
-            <td align="center">2020-05-25 00:00:00</td>
-            <td align="center">2020-06-25 23:59:59</td>
-            <th>已选 </th>
-        </tr>
-        <tr>
-            <td align="center">2</td>
-            <td align="center">大学物理实验</td>
-            <td align="center">星期二</td>
-            <td align="center">14:00:00</td>
-            <td align="center">16:15:00</td>
-            <td align="center">2020-05-24 00:00:00</td>
-            <td align="center">2020-05-31 18:30:00</td>
-            <th>已选 </th>
-        </tr>
-        <tr>
-            <td align="center">14</td>
-            <td align="center">大学英语</td>
-            <td align="center">星期一</td>
-            <td align="center">20:11:32</td>
-            <td align="center">20:11:32</td>
-            <td align="center">2020-06-05 20:11:32</td>
-            <td align="center">2020-06-09 20:11:32</td>
-            <th>已选 </th>
-        </tr>
-        <tr>
-            <th></th>
-            <th>
-                <button onclick="manage()">
-                    管理课程
-                </button>
-            </th>
-            <form action="chooseSubject" method="get">
-                <th colspan="2">
-                    <select name="subjectSelect">
-                        <option value="0">
-                            --选择课程--
-                        </option>
-                        <option value="1">
-                            高等数学
-                        </option>
-                        <option value="2">
-                            大学物理实验
-                        </option>
-                        <option value="14">
-                            大学英语
-                        </option>
-                    </select>
-                </th>
-                <th></th>
-                <th>                       <input type="submit" value="选课" onclick="return selectSubject()"/>                   </th>
-                <th>                       <input type="button" value="编辑已选课程" onclick="return editSubject()"/>
-                </th>
-                <th></th>
-            </form>          </tr>
-    </table>
     <table align="center" border="1" width="800" height="30" cellspacing="0" id="tableEnd">
         <tr></tr>
         <tr>
             <th >
-                <font color="blue" face="宋体" size="2">ps:每个学生只可以选择3门课</font>
+                <font color="blue" face="宋体" size="2">欢迎，
+                    <%
+                        User loginUser = null;
+                        boolean isLogin=session.getAttribute("loginUser")!=null;
+                        IEnterpriseService enterpriseService=new EnterpriseServiceImpl();
+                        if(isLogin) {
+                            loginUser=(User)session.getAttribute("loginUser");
+                            out.write(loginUser.getUserName());
+                        }else {
+                            out.write("游客，<a href=\"index.jsp\">点击这里登录</a>");
+                        }
+                    %>
+                </font>
             </th>
         </tr>
+        <tr></tr>
+    </table>
+    <table align="center" border="1" width="800" height="60" cellspacing="0" id="tableTitle">
+        <tr>
+            <th colspan="8">
+                <font color="blue" face="楷体" size="7">成果交易系统</font>
+            </th>
+        </tr>
+    </table>
+    <%
+        if(session.getAttribute("pageNumber")==null){
+            //载入数据并重新回到该界面
+            request.getRequestDispatcher("demand?method=reloadDemand").forward(request, response);
+            return;
+        }
+        int pageNumber= Integer.parseInt((String) session.getAttribute("pageNumber"));
+        List<Demand> demands= (List<Demand>) session.getAttribute("demands");
+        int sizeOfDemands=(int) session.getAttribute("sizeOfDemands");
+    %>
+    <table align="center" border="1" width="800" height="180" cellspacing="0" id="table01">
+        <tr>
+            <th>id</th>
+            <th>标题</th>
+            <th>简介</th>
+            <th>发布企业</th>
+        </tr>
+        <tr>              <th colspan="8">共找到<%=sizeOfDemands%>条需求</th>          </tr>
+        <%
+            if(demands!=null) {
+                for (int i = 0; i < DemandServlet.MAX_NUMBER_OF_MESSAGES; i++) {
+                    Demand demand=null;
+                    boolean isEmpty=!(i<demands.size());
+                    if(isEmpty) {
+                        demand=new Demand();
+                    }else{
+                        demand=demands.get(i);
+                    }
+                    String outputString="";
+                    if(isEmpty){
+                        outputString+="<tr>\n" +
+                                "            <th>&nbsp;</th>\n" +
+                                "            <th>&nbsp;</th>\n" +
+                                "            <th>&nbsp;</th>\n" +
+                                "            <th>&nbsp;</th>\n" +
+                                "        </tr>";
+                    }else {
+                        outputString += "<tr>\n" +
+                                "            <th>" + demand.getDemandId() + "</th>\n";
+                        if (isLogin) {
+                            outputString += "            <th><a href=\"demand?method=detailDemand&demandId=" + demand.getDemandId() + "\">" + demand.getTitle() + "</a></th>\n";
+
+                        } else {
+                            outputString += "            <th><a href=\"index.jsp\">" + demand.getTitle() + "</a></th>\n";
+                        }
+                        try {
+                            outputString += "            <th>" + demand.getIntroduction() + "</th>\n" +
+                                    "            <th>" + enterpriseService.getEnterpriseByEnterpriseId(demand.getEnterpriseId()).getEnterpriseName() + "</th>\n" +
+                                    "        </tr>\n";
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    try {
+                        out.write(outputString);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        %>
+        <tr></tr>
         <tr></tr>
     </table>
     <table align="center" border="1" width="800" height="30" cellspacing="0" id="otherFunction">
         <tr>
             <th>
-                <button onclick="manager()">管理员管理</button>
-                <script type='text/javascript'>
-                    function manager() {
-                        window.location.href="managerManage";
-                    }
-                </script>
+                <button onclick="pageChange(<%=(pageNumber-1)%>)">上一页</button>
             </th>
             <th>
-                <button onclick="faculty()">学 院 管 理</button>
+                <button onclick="pageChange(<%=(1)%>)">首页</button>
             </th>
             <th>
-                <button onclick="user()">学 生 管 理</button>
-                <script type='text/javascript'>
-                    function user() {
-                        window.location.href="userManage";
-                    }
-                </script>        </th>
+                <button onclick="pageChange(<%=(pageNumber+1)%>)">下一页</button>
+            </th>
         </tr>
     </table>
 </body>

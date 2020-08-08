@@ -8,10 +8,14 @@ import java.sql.SQLException;
  * @author BIANG
  */
 public interface IUserDao {
-    public boolean insert(User user) throws Exception;
-    public User queryByUserName(String userName) throws Exception;
-    public User queryByUserNameAndPassword(User user) throws Exception;
-    public User queryByUserNameAndEmail(User user) throws Exception;
+    boolean insert(User user) throws Exception;
+    User queryByUserName(String userName) throws Exception;
+    User queryByUserNameAndPassword(User user) throws Exception;
+    User queryByUserNameAndEmail(User user) throws Exception;
 
-    public boolean updatePassword(User user, String newPassword) throws Exception;
+    boolean updatePassword(User user, String newPassword) throws Exception;
+
+    User queryByEmail(String email) throws Exception;
+
+    User queryByUserId(int loginUserId) throws Exception;
 }

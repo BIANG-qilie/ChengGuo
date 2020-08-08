@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>忘记密码</title>
-    <script type="text/javascript"src="js/returnToHome.js"></script>
+    <script type="text/javascript"src="js/returnOneStep.js"></script>
     <script type="text/javascript" src="js/jquery-3.3.1.js" ></script>
     <script type="text/javascript" src="js/checkCode.js"></script>
 </head>
@@ -70,7 +70,7 @@
 </form>
 <table align="center" border="0" width="300" height="18" cellspacing="0">
     <tr>
-        <th> <button onclick="returnToHome()" style="width: 80px">返回</button></th>
+        <th> <button onclick="returnOneStep()" style="width: 80px">返回</button></th>
     </tr>
 </table>
 </body>

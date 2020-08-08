@@ -1,9 +1,9 @@
 <%@ page import="com.biang.www.util.EmailSender" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"  %>
 <html>
 <head>
     <title>忘记密码</title>
-    <script type="text/javascript"src="js/returnToHome.js"></script>
+    <script type="text/javascript" src="js/returnToHome.js"></script>
     <script type="text/javascript" src="js/jquery-3.3.1.js" ></script>
     <script type="text/javascript" src="js/checkCode.js"></script>
 </head>

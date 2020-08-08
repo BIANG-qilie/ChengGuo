@@ -35,7 +35,7 @@
 <body>
 <%
     Cookie[] cookies=request.getCookies();
-    String registerUserName="";
+    String registerUserName="",registerEmail="";
     int registerTime=0;
     for(int i=0;i<cookies.length;i++){
         if("registerTime".equals(cookies[i].getName())) {
@@ -43,6 +43,9 @@
         }
         if("registerUserName".equals(cookies[i].getName())) {
             registerUserName=cookies[i].getValue();
+        }
+        if("registerEmail".equals(cookies[i].getName())) {
+            registerEmail=cookies[i].getValue();
         }
     }
     Cookie registerTimeCookie=new Cookie("registerTime",String.valueOf(registerTime+1));
@@ -59,15 +62,21 @@
         <tr>
             <th colspan="5">
             <%
-            if(!registerUserName.equals("")){
-                out.write("用户名已存在");
-            }
+                if(!registerUserName.equals("")){
+                    out.write("用户名已存在<br/>");
+                }
+                if(!registerEmail.equals("")){
+                    out.write("邮箱已被绑定");
+                }
+                if(session.getAttribute("registerError")!=null) {
+                    out.write("用户注册异常");
+                }
             %>
             </th>
         </tr>
         <tr>
             <th colspan="2"> 用户名:</th>
-            <th colspan="3"><input type="text" required name="userName" value="<%out.write(registerUserName);%>"/> </th>
+            <th colspan="3"><input type="text" required name="userName" value="<%=(registerUserName.equals(""))?registerEmail:registerUserName%>"/> </th>
         </tr>
         <tr>
             <th colspan="2"> 密码:</th>

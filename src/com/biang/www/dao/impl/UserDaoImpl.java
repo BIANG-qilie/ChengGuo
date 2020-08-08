@@ -16,29 +16,26 @@ public class UserDaoImpl implements IUserDao {
     public boolean insert(User user) throws Exception {
         QueryRunner queryRunner=new QueryRunner(JDBCUtils.getDataSourceWIthDBCPByProperties());
         String sql="INSERT INTO user VALUES(default,?,?,default,?)";
-        if(queryRunner.update(sql, user.getUserName(),user.getPassword(),user.getEmail())>0) {
-            return true;
-        }
-        return false;
+        return queryRunner.update(sql, user.getUserName(), user.getPassword(), user.getEmail()) > 0;
     }
     @Override
     public User queryByUserName(String userName) throws Exception {
         QueryRunner queryRunner=new QueryRunner(JDBCUtils.getDataSourceWIthDBCPByProperties());
         String sql="select * from user where userName=?";
-        return queryRunner.query(sql,new BeanHandler<User>(User.class),userName);
+        return queryRunner.query(sql,new BeanHandler<>(User.class),userName);
     }
     @Override
     public User queryByUserNameAndPassword(User user) throws Exception {
         QueryRunner queryRunner=new QueryRunner(JDBCUtils.getDataSourceWIthDBCPByProperties());
         String sql="select * from user where userName=? and password=?";
-        return queryRunner.query(sql,new BeanHandler<User>(User.class),user.getUserName(),user.getPassword());
+        return queryRunner.query(sql,new BeanHandler<>(User.class),user.getUserName(),user.getPassword());
     }
 
     @Override
     public User queryByUserNameAndEmail(User user) throws Exception {
         QueryRunner queryRunner=new QueryRunner(JDBCUtils.getDataSourceWIthDBCPByProperties());
         String sql="select * from user where userName=? and email=?";
-        return queryRunner.query(sql,new BeanHandler<User>(User.class),user.getUserName(),user.getEmail());
+        return queryRunner.query(sql,new BeanHandler<>(User.class),user.getUserName(),user.getEmail());
     }
 
     @Override
@@ -49,5 +46,19 @@ public class UserDaoImpl implements IUserDao {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public User queryByEmail(String email) throws Exception {
+        QueryRunner queryRunner=new QueryRunner(JDBCUtils.getDataSourceWIthDBCPByProperties());
+        String sql="select * from user where email=?";
+        return queryRunner.query(sql,new BeanHandler<>(User.class),email);
+    }
+
+    @Override
+    public User queryByUserId(int loginUserId) throws Exception {
+        QueryRunner queryRunner=new QueryRunner(JDBCUtils.getDataSourceWIthDBCPByProperties());
+        String sql="select * from user where userId=?";
+        return queryRunner.query(sql,new BeanHandler<>(User.class),loginUserId);
     }
 }

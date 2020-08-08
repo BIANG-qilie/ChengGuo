@@ -11,20 +11,20 @@ import java.io.PrintWriter;
 @WebServlet("/checkCode")
 public class CheckCodeServlet extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      boolean resultTip = false;
-       String checkcodeClient =  request.getParameter("checkcode");
-       String checkcodeServer = (String) request.getSession().getAttribute("CKECKCODE");
-       if(checkcodeServer.equals(checkcodeClient)){
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        boolean resultTip = false;
+        String checkcodeClient =  request.getParameter("checkcode");
+        String checkcodeServer = (String) request.getSession().getAttribute("CKECKCODE");
+        if(checkcodeServer.equals(checkcodeClient)){
            resultTip = true;
-       }
-       response.setContentType("text/html;charset=UTF-8");
+        }
+        response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         out.write(String.valueOf(resultTip));
         out.flush();
         out.close();
     }
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
     }
 }

@@ -17,20 +17,12 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public boolean register(User user) throws Exception {
-        if(userDao.queryByUserName(user.getUserName())!=null) {
-            return false;
-        }
         return userDao.insert(user);
     }
 
     @Override
-    public User isExist(User user) {
-        try {
+    public User isUserNameExist(User user) throws Exception {
             return userDao.queryByUserName(user.getUserName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     @Override
@@ -41,6 +33,16 @@ public class UserServiceImpl implements IUserService {
     @Override
     public boolean changePassword(User user, String newPassword) throws Exception {
         return userDao.updatePassword(user,newPassword);
+    }
+
+    @Override
+    public User isEmailExist(User user) throws Exception {
+        return userDao.queryByEmail(user.getEmail());
+    }
+
+    @Override
+    public User getUserByUserId(int loginUserId) throws Exception {
+        return userDao.queryByUserId(loginUserId);
     }
 }
 

@@ -31,29 +31,32 @@ public class UserServlet extends BaseServlet {
         user.setPassword(password);
         Cookie[] cookies=request.getCookies();
         try {
-            User loginUser=null;
+            User loginUser;
             loginUser=userService.login(user);
             if(loginUser!=null) {
                 HttpSession session=request.getSession();
                 session.setAttribute("loginUser",loginUser);
                 session.setMaxInactiveInterval(1800);
-                for(int i =0;i<cookies.length;i++){
-                    cookies[i].setMaxAge(0);
-                    response.addCookie(cookies[i]);
+                for (Cookie value : cookies) {
+                    value.setMaxAge(0);
+                    response.addCookie(value);
                 }
                 response.addCookie(new Cookie("userName", loginUser.getUserName()));
                 if(rememberPassword!=null) {
                     response.addCookie(new Cookie("password", loginUser.getPassword()));
                 }
-                request.getRequestDispatcher("main.jsp").forward(request, response);
+                Cookie cookie=new Cookie("JSESSIONID",session.getId());
+                cookie.setMaxAge(1800);
+                response.addCookie(cookie);
+                response.sendRedirect(request.getContextPath() + "/main.jsp");
                 return;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        for(int i =0;i<cookies.length;i++){
-            cookies[i].setMaxAge(0);
-            response.addCookie(cookies[i]);
+        for (Cookie cookie : cookies) {
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
         }
         response.addCookie(new Cookie("errorUserName", user.getUserName()));
         response.sendRedirect(request.getContextPath() + "/login.jsp");
@@ -70,18 +73,31 @@ public class UserServlet extends BaseServlet {
         user.setPassword(password);
         user.setEmail(email);
         try {
-            if(userService.register(user)) {
-                //正常注册成功
-                Cookie[] cookies=request.getCookies();
-                for(Cookie cookie:cookies){
-                    if("registerUserName".equals(cookie.getName())
-                            ||"registerTime".equals(cookie.getName())){
-                        cookie.setMaxAge(0);
-                        response.addCookie(cookie);
+            if(userService.isUserNameExist(user)==null) {
+                //用户名不重复
+                if(userService.isEmailExist(user)==null){
+                    //邮箱不重复
+                    if(userService.register(user)) {
+                        Cookie[] cookies = request.getCookies();
+                        for (Cookie cookie : cookies) {
+                            if ("registerUserName".equals(cookie.getName())
+                                    || "registerTime".equals(cookie.getName())) {
+                                cookie.setMaxAge(0);
+                                response.addCookie(cookie);
+                            }
+                        }
+                        request.getRequestDispatcher("registerSuccess.jsp").forward(request, response);
+                    }else{
+                        //未知的异常
+                        request.getSession().setAttribute("registerError",user);
+                        EmailSender emailSender=new EmailSender();
+                        emailSender.ErrorReport("用户注册异常",  user);
+                        request.getRequestDispatcher("register.jsp").forward(request, response);
                     }
+                }else{//异常 邮箱重复
+                    response.addCookie(new Cookie("registerEmail",userName));
+                    response.sendRedirect(request.getContextPath() + "/register.jsp");
                 }
-                request.getRequestDispatcher("registerSuccess.jsp").forward(request, response);
-                return;
             }else{//异常 用户名重复
                 response.addCookie(new Cookie("registerUserName",userName));
                 response.sendRedirect(request.getContextPath() + "/register.jsp");
@@ -91,13 +107,13 @@ public class UserServlet extends BaseServlet {
         }
     }
     public void forgetPassword(HttpServletRequest request, HttpServletResponse response)
-            throws IOException{
+            throws Exception {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         String userName=request.getParameter("userName");
         User user=new User();
         user.setUserName(userName);
-        if(userService.isExist(user)!=null){
+        if(userService.isUserNameExist(user)!=null){
             response.addCookie(new Cookie("forgetPasswordUserName",userName));
             response.sendRedirect(request.getContextPath() + "/forgetPasswordEmail.jsp");
         }else{
@@ -137,9 +153,7 @@ public class UserServlet extends BaseServlet {
             emailSender.Initialization(forgetPasswordUser,checkCode);
             try {
                 emailSender.send();
-            } catch (MessagingException e) {
-                e.printStackTrace();
-            } catch (GeneralSecurityException e) {
+            } catch (MessagingException | GeneralSecurityException e) {
                 e.printStackTrace();
             }
             try {
@@ -164,6 +178,8 @@ public class UserServlet extends BaseServlet {
         }else {
             //修改失败
             session.setAttribute("changePasswordError",forgetPasswordUser);
+            EmailSender emailSender=new EmailSender();
+            emailSender.ErrorReport("密码修改异常",  forgetPasswordUser);
             request.getRequestDispatcher("changePassword.jsp").forward(request, response);
         }
 

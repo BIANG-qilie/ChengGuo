@@ -6,11 +6,11 @@
   Time: 13:26
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <html>
 <head>
     <title>更改密码</title>
-    <script type="text/javascript"src="js/returnToHome.js"></script>
+    <script type="text/javascript"src="js/returnOneStep.js"></script>
     <script type="text/javascript">
         function check() {
             var password=document.getElementsByName("newPassword");
@@ -51,8 +51,6 @@
                     User errorUser=new User();
                     if(session.getAttribute("changePasswordError")!=null) {
                         out.write("密码修改异常");
-                        EmailSender emailSender=new EmailSender();
-                        emailSender.ErrorReport("密码修改异常",  errorUser);
                     }
                 %>
             </th>
@@ -83,7 +81,7 @@
 </form>
 <table align="center" border="0" width="300" height="18" cellspacing="0">
     <tr>
-        <th> <button onclick="returnToHome()" style="width: 80px">返回</button></th>
+        <th> <button onclick="returnOneStep()" style="width: 80px">返回</button></th>
     </tr>
 </table>
 </body>
