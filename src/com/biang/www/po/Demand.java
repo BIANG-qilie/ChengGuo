@@ -6,8 +6,6 @@ import java.util.ArrayList;
  * @author dell
  */
 public class Demand {
-    private int demandId;
-
     public Demand(int demandId,
                   String title,
                   String introduction,
@@ -17,7 +15,8 @@ public class Demand {
                   String timeRequirement,
                   ArrayList<String> annexes,
                   int enterpriseId,
-                  int conditionsOfCertification) {
+                  int conditionOfCertification,
+                  int conditionOfDemand) {
         this.demandId = demandId;
         this.title = title;
         this.introduction = introduction;
@@ -27,11 +26,13 @@ public class Demand {
         this.timeRequirement = timeRequirement;
         this.annexes = annexes;
         this.enterpriseId = enterpriseId;
-        this.conditionsOfCertification = conditionsOfCertification;
+        this.conditionOfCertification = conditionOfCertification;
+        this.conditionOfDemand=conditionOfDemand;
     }
 
     public Demand() { }
 
+    private int demandId;
     private String title;
     private String introduction;
     private String specificContent;
@@ -40,7 +41,10 @@ public class Demand {
     private String timeRequirement;
     private ArrayList<String> annexes;
     private int enterpriseId;
-    private int conditionsOfCertification;
+    private int conditionOfCertification;
+
+
+    private int conditionOfDemand;
 
     public int getDemandId() {
         return demandId;
@@ -126,12 +130,20 @@ public class Demand {
         this.enterpriseId = enterpriseId;
     }
 
-    public int getConditionsOfCertification() {
-        return conditionsOfCertification;
+    public int getConditionOfCertification() {
+        return conditionOfCertification;
     }
 
-    public void setConditionsOfCertification(int conditionsOfCertification) {
-        this.conditionsOfCertification = conditionsOfCertification;
+    public void setConditionOfCertification(int conditionOfCertification) {
+        this.conditionOfCertification = conditionOfCertification;
+    }
+
+    public int getConditionOfDemand() {
+        return conditionOfDemand;
+    }
+
+    public void setConditionOfDemand(int conditionOfDemand) {
+        this.conditionOfDemand = conditionOfDemand;
     }
 
 

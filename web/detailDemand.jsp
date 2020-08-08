@@ -20,17 +20,41 @@
         }
     %>
     <title><%=demand.getTitle()%>-详情</title>
-    <script type="text/javascript" src="js/returnOneStep.js"></script>
+    <script type="text/javascript" src="js/returnTo.js"></script>
     <script type="text/javascript">
+        var isApplied=true;
+        var demandId=<%=demand.getDemandId()%>;
+        var loginUserId=<%=loginUser.getUserId()%>;
+
         function checkIsMyEnterprise() {
             if(<%=(loginUser.getUserId()==enterprise.getUserId())%>){
                 alert("不能报名自己发布的需求");
                 return false;
             }else {
-                alert("报名成功");
-                return true
+                if(isApplied){
+                    alert("您已经报名了");
+                    return false;
+                }else {
+                    alert("报名成功");
+                    return true;
+                }
             }
         }
+    </script>
+    <script type="text/javascript">
+        window.onload=function (){
+            $.get("demandUser",
+                {
+                    method:"checkApplied",
+                    demandId: demandId,
+                    loginUserId:loginUserId
+                },
+                function(result){
+                    isApplied=result;
+                    alert(isApplied);
+                });
+        }
+
     </script>
     <link rel="stylesheet" type="text/css" href="css/detailDemand.css"/>
 </head>
@@ -82,8 +106,8 @@
     <table align="center" border="0" width="300" height="18" cellspacing="0">
         <tr>
             <th>
-                <form>
-                    <input type="hidden" name="method" value="apply"/>
+                <form action="demandUser" method="post">
+                    <input type="hidden" name="method" value="applyDemand"/>
                     <input type="hidden" name="demandId" value="<%=demand.getDemandId()%>"/>
                     <input  type="submit" onclick="return checkIsMyEnterprise()" style="width: 80px" value="报名"/>
                 </form>
@@ -92,7 +116,12 @@
     </table>
     <table align="center" border="0" width="300" height="18" cellspacing="0">
         <tr>
-            <th> <button onclick="returnOneStep()" style="width: 80px">返回</button></th>
+            <th>
+                <script type="text/javascript">
+                    var url="main.jsp";
+                </script>
+                <button onclick="returnTo(url)" style="width: 80px">返回</button>
+            </th>
         </tr>
     </table>
 </body>

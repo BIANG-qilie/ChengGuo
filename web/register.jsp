@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <title>注册</title>
-    <script type="text/javascript"src="js/returnToHome.js"></script>
+    <script type="text/javascript"src="js/returnTo.js"></script>
     <script type="text/javascript">
         function check() {
             var password=document.getElementsByName("password");
@@ -121,7 +121,7 @@
 </form>
 <table align="center" border="0" width="300" height="18" cellspacing="0">
     <tr>
-        <th> <button onclick="returnToHome()" style="width: 80px">返回</button></th>
+        <th> <button onclick="returnTo()" style="width: 80px">返回</button></th>
     </tr>
 </table>
 </body>
