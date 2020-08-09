@@ -78,4 +78,38 @@ public class DemandServlet extends BaseServlet {
         session.setAttribute("pageNumber",pageNumber);
         reloadDemand(request,response);
     }
+    public void query(HttpServletRequest request, HttpServletResponse response)
+            throws Exception{
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+        HttpSession session=request.getSession();
+        User loginUser= (User) session.getAttribute("loginUser");
+        List<Demand> allDemands=new ArrayList<>() ;
+        String queryContent= request.getParameter("queryContent");
+        switch ((loginUser==null)?-10086:loginUser.getLevel()) {
+            case User.MANAGER:
+                //看得到所有需求
+                allDemands.addAll(demandService.queryFromAllDemand(queryContent));
+                break;
+            case User.ENTERPRISE_USER:
+                //看得到自己企业未通过以及审核中的需求
+                allDemands.addAll(demandService.queryFromEnterpriseUser(loginUser,queryContent));
+            case User.COMMON_USER:
+                //看得到所有通过的需求
+                allDemands.addAll(demandService.queryFromPassCertificationDemand(queryContent));
+                break;
+            default:
+                request.getRequestDispatcher("index.jsp").forward(request, response);
+                break;
+        }
+        int pageNumber=Integer.parseInt ((session.getAttribute("pageNumber")!=null)?((String)session.getAttribute("pageNumber")):"1");
+        List<Demand> demands=new ArrayList<>() ;
+        for(int i = MAX_NUMBER_OF_MESSAGES*(pageNumber-1); i< Integer.min(MAX_NUMBER_OF_MESSAGES*pageNumber,allDemands.size()); i++){
+            demands.add(allDemands.get(i));
+        }
+        session.setAttribute("demands",demands);
+        session.setAttribute("sizeOfDemands",allDemands.size());
+        session.setAttribute("pageNumber",String.valueOf(pageNumber));
+        request.getRequestDispatcher("main.jsp").forward(request, response);
+    }
 }

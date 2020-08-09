@@ -33,4 +33,19 @@ public class DemandServiceImpl implements IDemandService {
     public Demand getDemandByDemandId(int demandId) throws Exception {
         return demandDao.queryByDemandid(demandId);
     }
+
+    @Override
+    public List<Demand> queryFromAllDemand(String queryContent) throws Exception {
+        return demandDao.queryFromAllDemand(queryContent);
+    }
+
+    @Override
+    public List<Demand> queryFromEnterpriseUser(User loginUser,String queryContent) throws Exception {
+        return demandDao.queryFromEnterpriseId(enterpriseDao.queryByUserId(loginUser.getUserId()).getEnterpriseId(),queryContent);
+    }
+
+    @Override
+    public List<Demand> queryFromPassCertificationDemand(String queryContent) throws Exception {
+        return demandDao.queryFromPassCertificationDemand(Certification.PASS_CERTIFICATION,queryContent);
+    }
 }

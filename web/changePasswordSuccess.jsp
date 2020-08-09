@@ -19,6 +19,13 @@
         .
     </c:forEach>
     <%
+        Cookie[] cookies=request.getCookies();
+        for(Cookie cookie:cookies){
+            if("forgetPasswordUserName".equals(cookie.getName())||"changePasswordUserName".equals(cookie.getName())){
+                cookie.setMaxAge(0);
+                response.addCookie(cookie);
+            }
+        }
         response.setHeader("refresh","3;url=main.jsp");
     %>
 </body>

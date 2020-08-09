@@ -1,6 +1,9 @@
 <%@ page import="com.biang.www.po.Demand" %>
 <%@ page import="com.biang.www.po.Enterprise" %>
-<%@ page import="com.biang.www.po.User" %><%--
+<%@ page import="com.biang.www.po.User" %>
+<%@ page import="com.biang.www.dao.IDemandUserDao" %>
+<%@ page import="com.biang.www.service.IDemandUserService" %>
+<%@ page import="com.biang.www.service.impl.DemandUserServiceImpl" %><%--
   Created by IntelliJ IDEA.
   User: dell
   Date: 2020/8/8
@@ -11,9 +14,14 @@
 <html>
 <head>
     <%
+        IDemandUserService demandUserService=new DemandUserServiceImpl();
         Demand demand= (Demand) session.getAttribute("demand");
         Enterprise enterprise= (Enterprise) session.getAttribute("enterprise");
         User loginUser=(User)session.getAttribute("loginUser");
+        if(loginUser == null){
+            response.sendRedirect(request.getContextPath() + "/index.jsp");
+            return;
+        }
         if(demand==null||enterprise==null){
             request.getRequestDispatcher("main.jsp").forward(request, response);
             return;
@@ -22,10 +30,7 @@
     <title><%=demand.getTitle()%>-详情</title>
     <script type="text/javascript" src="js/returnTo.js"></script>
     <script type="text/javascript">
-        var isApplied=true;
-        var demandId=<%=demand.getDemandId()%>;
-        var loginUserId=<%=loginUser.getUserId()%>;
-
+        var isApplied=<%=demandUserService.isApplied(String.valueOf(loginUser.getUserId()), String.valueOf(demand.getDemandId()))%>;
         function checkIsMyEnterprise() {
             if(<%=(loginUser.getUserId()==enterprise.getUserId())%>){
                 alert("不能报名自己发布的需求");
@@ -40,21 +45,6 @@
                 }
             }
         }
-    </script>
-    <script type="text/javascript">
-        window.onload=function (){
-            $.get("demandUser",
-                {
-                    method:"checkApplied",
-                    demandId: demandId,
-                    loginUserId:loginUserId
-                },
-                function(result){
-                    isApplied=result;
-                    alert(isApplied);
-                });
-        }
-
     </script>
     <link rel="stylesheet" type="text/css" href="css/detailDemand.css"/>
 </head>
@@ -79,6 +69,9 @@
                                 <li>
                                     <label >时间要求</label>
                                     <span class="lab_l"><%=demand.getTimeRequirement()%></span></li>
+                                <li>
+                                    <label >是否已报名</label>
+                                    <span class="lab_l"><%=((demandUserService.isApplied(String.valueOf(loginUser.getUserId()), String.valueOf(demand.getDemandId())))?"是":"否")%></span></li>
                             </ul>
                         </div>
                     </div>
@@ -87,7 +80,7 @@
             <div class="goods-box product-inform-box mt10">
                 <div class="pro-info-detail">
                     <div id="content" style="display:block" class="pdetail tab_content_event_class">
-                        <div class="dvop-title">
+                        <div class="drop-title">
                             <h4>详细说明</h4>
                         <div class="d-xi-b">
                             <div style="overflow:hidden;">
@@ -126,3 +119,4 @@
     </table>
 </body>
 </html>
+

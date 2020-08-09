@@ -1,7 +1,10 @@
 package com.biang.www.controller;
 
+import com.biang.www.po.Demand;
 import com.biang.www.po.User;
+import com.biang.www.service.IDemandUserService;
 import com.biang.www.service.IUserService;
+import com.biang.www.service.impl.DemandUserServiceImpl;
 import com.biang.www.service.impl.UserServiceImpl;
 import com.biang.www.util.CommonUtil;
 import com.biang.www.util.EmailSender;
@@ -12,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.List;
 
 /**
  * @author BIANG
@@ -19,6 +23,7 @@ import java.security.GeneralSecurityException;
 @WebServlet("/user")
 public class UserServlet extends BaseServlet {
     IUserService userService=new UserServiceImpl();
+    IDemandUserService demandUserService=new DemandUserServiceImpl();
     public void login(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         request.setCharacterEncoding("UTF-8");
@@ -147,7 +152,7 @@ public class UserServlet extends BaseServlet {
             String checkCode= CommonUtil.getRandomNum();
             HttpSession session=request.getSession();
             session.setAttribute("CKECKCODE", checkCode);
-            session.setAttribute("forgetPasswordUser",forgetPasswordUser);
+            session.setAttribute("changePasswordUser",forgetPasswordUser);
             //发送邮件
             EmailSender emailSender=new EmailSender();
             emailSender.Initialization(forgetPasswordUser,checkCode);
@@ -171,18 +176,60 @@ public class UserServlet extends BaseServlet {
             throws Exception {
         String newPassword=request.getParameter("newPassword");
         HttpSession session=request.getSession();
-        User forgetPasswordUser= (User) session.getAttribute("forgetPasswordUser");
-        if(userService.changePassword(forgetPasswordUser,newPassword)){
+        User changePasswordUser= (User) session.getAttribute("changePasswordUser");
+        User loginUser=(User) session.getAttribute("loginUser");
+        if(userService.changePassword(changePasswordUser,newPassword)){
             //修改成功
+            if(loginUser!=null&&loginUser.getUserName().equals(changePasswordUser.getUserName())){
+                session.setAttribute("loginUser",loginUser);
+            }
             response.sendRedirect(request.getContextPath() + "/changePasswordSuccess.jsp");
         }else {
             //修改失败
-            session.setAttribute("changePasswordError",forgetPasswordUser);
+            session.setAttribute("changePasswordError",changePasswordUser);
             EmailSender emailSender=new EmailSender();
-            emailSender.ErrorReport("密码修改异常",  forgetPasswordUser);
+            emailSender.ErrorReport("密码修改异常",  changePasswordUser);
             request.getRequestDispatcher("changePassword.jsp").forward(request, response);
         }
 
+    }
+    public void detailUser(HttpServletRequest request, HttpServletResponse response)
+            throws Exception{
+        HttpSession session=request.getSession();
+        User loginUser=(User)session.getAttribute("loginUser");
+        List<Demand> demands=demandUserService.getDemandByUser(loginUser);
+        List<Object[]> conditionsOfApply=demandUserService.getConditionOfApplyByUser(loginUser);
+        for(int i=0;i<demands.size();i++){
+            int demandId=demands.get(i).getDemandId();
+            for(int j=0;j<conditionsOfApply.size();j++){
+                if(demandId==(int)conditionsOfApply.get(j)[0]){
+                    demands.get(i).setConditionOfApply((int)conditionsOfApply.get(j)[1]);
+                    break;
+                }
+            }
+        }
+        session.setAttribute("demands",demands);
+        request.getRequestDispatcher("detailUser.jsp").forward(request, response);
+    }
+    public void checkPassword(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        String password=request.getParameter("password");
+        HttpSession session=request.getSession();
+        String userName=((User)session.getAttribute("loginUser")).getUserName();
+        User user=new User();
+        user.setUserName(userName);
+        user.setPassword(password);
+        User loginUser=userService.login(user);
+        if(loginUser==null){
+            //密码错误
+            response.addCookie(new Cookie("errorPassword", password));
+            response.sendRedirect(request.getContextPath() + "/checkPassword.jsp");
+        }else{
+            //密码正确
+            session.setAttribute("changePasswordUser", loginUser);
+            response.addCookie(new Cookie("changePasswordUserName", loginUser.getUserName()));
+            response.sendRedirect(request.getContextPath() + "/changePassword.jsp");
+        }
     }
 
 }

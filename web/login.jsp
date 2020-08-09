@@ -44,7 +44,7 @@
     response.addCookie(loginTimeCookie);
 %>
 <form action="user" method="GET" id="form">
-    <table align="center" border="0" width="300" height="<%=((loginTime>5)?350:350)%>" cellspacing="0">
+    <table align="center" border="0" width="300" height="<%=((loginTime>5)?370:350)%>" cellspacing="0">
         <tr></tr>
         <tr></tr>
         <tr>

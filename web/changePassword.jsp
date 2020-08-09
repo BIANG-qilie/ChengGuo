@@ -44,11 +44,11 @@
                     String userName="用户名异常";
                     Cookie[] cookies=request.getCookies();
                     for(Cookie cookie:cookies){
-                        if("forgetPasswordUserName".equals(cookie.getName())){
+                        if("forgetPasswordUserName".equals(cookie.getName())||"changePasswordUserName".equals(cookie.getName())){
                             userName=cookie.getValue();
                         }
                     }
-                    User errorUser=new User();
+
                     if(session.getAttribute("changePasswordError")!=null) {
                         out.write("密码修改异常");
                     }

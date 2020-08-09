@@ -34,7 +34,7 @@
 
 </head>
 <body>
-    <table align="center" border="1" width="800" height="30" cellspacing="0" id="tableEnd">
+    <table align="center" border="1" width="800" height="30" cellspacing="0" id="user">
         <tr></tr>
         <tr>
             <th >
@@ -46,6 +46,7 @@
                         if(isLogin) {
                             loginUser=(User)session.getAttribute("loginUser");
                             out.write(loginUser.getUserName());
+                            out.write(" <a href=\"user?method=detailUser\">个人资料</a>");
                         }else {
                             out.write("游客，<a href=\"index.jsp\">点击这里登录</a>");
                         }
@@ -62,6 +63,21 @@
             </th>
         </tr>
     </table>
+    <table align="center" border="1" width="800" height="30" cellspacing="0" id="query">
+        <tr></tr>
+        <tr>
+            <th >
+                <font color="blue" face="宋体" size="2">
+                    <form action="demand" method="GET">
+                        <input type="hidden" name="method" value="query"/>
+                        <input type="text" name="queryContent"/>
+                        <input type="submit" value="搜索"/>
+                    </form>
+                </font>
+            </th>
+        </tr>
+        <tr></tr>
+    </table>
     <%
         if(session.getAttribute("pageNumber")==null){
             //载入数据并重新回到该界面
@@ -72,7 +88,7 @@
         List<Demand> demands= (List<Demand>) session.getAttribute("demands");
         int sizeOfDemands=(int) session.getAttribute("sizeOfDemands");
     %>
-    <table align="center" border="1" width="800" height="180" cellspacing="0" id="table01">
+    <table align="center" border="1" width="800" height="300" cellspacing="0" id="table01">
         <tr>
             <th>id</th>
             <th>标题</th>
@@ -83,7 +99,7 @@
         <%
             if(demands!=null) {
                 for (int i = 0; i < DemandServlet.MAX_NUMBER_OF_MESSAGES; i++) {
-                    Demand demand=null;
+                    Demand demand;
                     boolean isEmpty=!(i<demands.size());
                     if(isEmpty) {
                         demand=new Demand();
@@ -124,6 +140,17 @@
             }
         %>
         <tr></tr>
+        <tr></tr>
+    </table>
+    <table align="center" border="1" width="800" height="30" cellspacing="0" id="tableEnd">
+        <tr></tr>
+        <tr>
+            <th >
+                <font color="blue" face="宋体" size="2">
+                    当前第<%=pageNumber%>页
+                </font>
+            </th>
+        </tr>
         <tr></tr>
     </table>
     <table align="center" border="1" width="800" height="30" cellspacing="0" id="otherFunction">

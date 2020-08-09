@@ -42,7 +42,22 @@ public class Demand {
     private ArrayList<String> annexes;
     private int enterpriseId;
     private int conditionOfCertification;
+    private int conditionOfApply;
 
+    public Demand(int demandId, String title, String introduction, String specificContent, String demandUnits, String budget, String timeRequirement, ArrayList<String> annexes, int enterpriseId, int conditionOfCertification, int conditionOfApply, int conditionOfDemand) {
+        this.demandId = demandId;
+        this.title = title;
+        this.introduction = introduction;
+        this.specificContent = specificContent;
+        this.demandUnits = demandUnits;
+        this.budget = budget;
+        this.timeRequirement = timeRequirement;
+        this.annexes = annexes;
+        this.enterpriseId = enterpriseId;
+        this.conditionOfCertification = conditionOfCertification;
+        this.conditionOfApply = conditionOfApply;
+        this.conditionOfDemand = conditionOfDemand;
+    }
 
     private int conditionOfDemand;
 
@@ -146,6 +161,11 @@ public class Demand {
         this.conditionOfDemand = conditionOfDemand;
     }
 
+    public int getConditionOfApply() {
+        return conditionOfApply;
+    }
 
-
+    public void setConditionOfApply(int conditionOfApply) {
+        this.conditionOfApply = conditionOfApply;
+    }
 }

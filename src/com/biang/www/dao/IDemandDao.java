@@ -12,4 +12,10 @@ public interface IDemandDao {
     List<Demand> queryByConditionsOfCertification(int conditionsOfCertification) throws Exception;
 
     Demand queryByDemandid(int demandId) throws Exception;
+
+    List<Demand> queryFromAllDemand(String queryContent) throws Exception;
+
+    List<Demand> queryFromEnterpriseId(int enterpriseId, String queryContent) throws Exception;
+
+    List<Demand> queryFromPassCertificationDemand(int conditionsOfCertification,String queryContent) throws Exception;
 }
