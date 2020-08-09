@@ -1,6 +1,7 @@
 package com.biang.www.service;
 
 import com.biang.www.po.Demand;
+import com.biang.www.po.Enterprise;
 import com.biang.www.po.User;
 
 import java.util.Collection;
@@ -20,4 +21,6 @@ public interface IDemandService {
     List<Demand> queryFromEnterpriseUser(User loginUser,String queryContent) throws Exception;
 
     List<Demand> queryFromPassCertificationDemand(String queryContent) throws Exception;
+
+    List<Demand> getDemandByEnterprise(Enterprise enterprise) throws Exception;
 }

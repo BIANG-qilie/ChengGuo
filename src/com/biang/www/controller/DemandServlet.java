@@ -44,6 +44,7 @@ public class DemandServlet extends BaseServlet {
             case User.ENTERPRISE_USER:
                 //看得到自己企业未通过以及审核中的需求
                 allDemands.addAll(demandService.getDemandByEnterpriseUser(loginUser));
+                break;
             case User.COMMON_USER:
                 //看得到所有通过的需求
                 allDemands.addAll(demandService.getPassCertificationDemand());
@@ -94,6 +95,7 @@ public class DemandServlet extends BaseServlet {
             case User.ENTERPRISE_USER:
                 //看得到自己企业未通过以及审核中的需求
                 allDemands.addAll(demandService.queryFromEnterpriseUser(loginUser,queryContent));
+                break;
             case User.COMMON_USER:
                 //看得到所有通过的需求
                 allDemands.addAll(demandService.queryFromPassCertificationDemand(queryContent));

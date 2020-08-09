@@ -5,6 +5,7 @@ import com.biang.www.dao.IEnterpriseDao;
 import com.biang.www.dao.impl.DemandDaompl;
 import com.biang.www.dao.impl.EnterpriseDaoImpl;
 import com.biang.www.po.Demand;
+import com.biang.www.po.Enterprise;
 import com.biang.www.po.User;
 import com.biang.www.service.IDemandService;
 import com.biang.www.util.Certification;
@@ -21,7 +22,7 @@ public class DemandServiceImpl implements IDemandService {
 
     @Override
     public List<Demand> getDemandByEnterpriseUser(User loginUser) throws Exception {
-        return demandDao.queryByEnterpriseId(enterpriseDao.queryByUserId(loginUser.getUserId()).getEnterpriseId());
+        return demandDao.queryByEnterpriseIdAndConditionOfCertification(enterpriseDao.queryByUserId(loginUser.getUserId()).getEnterpriseId(),Certification.PASS_CERTIFICATION);
     }
 
     @Override
@@ -41,11 +42,16 @@ public class DemandServiceImpl implements IDemandService {
 
     @Override
     public List<Demand> queryFromEnterpriseUser(User loginUser,String queryContent) throws Exception {
-        return demandDao.queryFromEnterpriseId(enterpriseDao.queryByUserId(loginUser.getUserId()).getEnterpriseId(),queryContent);
+        return demandDao.queryFromEnterpriseId(enterpriseDao.queryByUserId(loginUser.getUserId()).getEnterpriseId(),Certification.PASS_CERTIFICATION,queryContent);
     }
 
     @Override
     public List<Demand> queryFromPassCertificationDemand(String queryContent) throws Exception {
         return demandDao.queryFromPassCertificationDemand(Certification.PASS_CERTIFICATION,queryContent);
+    }
+
+    @Override
+    public List<Demand> getDemandByEnterprise(Enterprise enterprise) throws Exception {
+        return demandDao.queryByEnterpriseId(enterprise.getEnterpriseId());
     }
 }

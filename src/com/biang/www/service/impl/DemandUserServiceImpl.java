@@ -3,6 +3,7 @@ package com.biang.www.service.impl;
 import com.biang.www.dao.IDemandUserDao;
 import com.biang.www.dao.impl.DemandUserDaoImpl;
 import com.biang.www.po.Demand;
+import com.biang.www.po.Enterprise;
 import com.biang.www.po.User;
 import com.biang.www.service.IDemandUserService;
 
@@ -29,4 +30,6 @@ public class DemandUserServiceImpl implements IDemandUserService {
     public List<Object[]> getConditionOfApplyByUser(User user) throws Exception {
         return demandUserDao.queryConditionOfApplyByUserByUserId(user.getUserId());
     }
+
+
 }

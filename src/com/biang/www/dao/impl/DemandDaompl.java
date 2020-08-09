@@ -57,9 +57,9 @@ public class DemandDaompl implements IDemandDao {
     }
 
     @Override
-    public List<Demand> queryFromEnterpriseId(int enterpriseId, String queryContent) throws Exception {
+    public List<Demand> queryFromEnterpriseId(int enterpriseId,int conditionOfCertification,String queryContent) throws Exception {
         QueryRunner queryRunner=new QueryRunner(JDBCUtils.getDataSourceWIthDBCPByProperties());
-        String sql="select * from demand WHERE enterpriseId=? AND( \n"+
+        String sql="select * from demand WHERE (enterpriseId=? OR conditionOfCertification=? ) AND( \n"+
                 "demandId REGEXP ? \n" +
                 "OR title REGEXP ? \n" +
                 "OR introduction REGEXP ? \n" +
@@ -67,9 +67,8 @@ public class DemandDaompl implements IDemandDao {
                 "OR demandUnits REGEXP ? \n" +
                 "OR budget REGEXP ? \n" +
                 "OR timeRequirement REGEXP ? \n" +
-                "OR conditionOfCertification REGEXP ? \n" +
                 "OR conditionOfDemand REGEXP ? );";
-        return queryRunner.query(sql,new BeanListHandler<>(Demand.class),enterpriseId,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent);
+        return queryRunner.query(sql,new BeanListHandler<>(Demand.class),enterpriseId,conditionOfCertification,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent);
     }
 
     @Override
@@ -86,5 +85,12 @@ public class DemandDaompl implements IDemandDao {
                 "OR enterpriseId REGEXP ? \n" +
                 "OR conditionOfDemand REGEXP ? );";
         return queryRunner.query(sql,new BeanListHandler<>(Demand.class),conditionsOfCertification,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent);
+    }
+
+    @Override
+    public List<Demand> queryByEnterpriseIdAndConditionOfCertification(int enterpriseId, int conditionOfCertification) throws Exception {
+        QueryRunner queryRunner=new QueryRunner(JDBCUtils.getDataSourceWIthDBCPByProperties());
+        String sql="select * from demand WHERE enterpriseId=? OR conditionOfCertification=?";
+        return queryRunner.query(sql,new BeanListHandler<>(Demand.class),enterpriseId,conditionOfCertification);
     }
 }

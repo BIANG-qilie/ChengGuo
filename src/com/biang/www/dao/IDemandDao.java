@@ -15,7 +15,9 @@ public interface IDemandDao {
 
     List<Demand> queryFromAllDemand(String queryContent) throws Exception;
 
-    List<Demand> queryFromEnterpriseId(int enterpriseId, String queryContent) throws Exception;
+    List<Demand> queryFromEnterpriseId(int enterpriseId, int conditionOfCertification,String queryContent) throws Exception;
 
     List<Demand> queryFromPassCertificationDemand(int conditionsOfCertification,String queryContent) throws Exception;
+
+    List<Demand> queryByEnterpriseIdAndConditionOfCertification(int enterpriseId, int conditionOfCertification) throws Exception;
 }

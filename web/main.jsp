@@ -40,13 +40,19 @@
             <th >
                 <font color="blue" face="宋体" size="2">欢迎，
                     <%
-                        User loginUser = null;
+                        User loginUser;
                         boolean isLogin=session.getAttribute("loginUser")!=null;
                         IEnterpriseService enterpriseService=new EnterpriseServiceImpl();
                         if(isLogin) {
                             loginUser=(User)session.getAttribute("loginUser");
                             out.write(loginUser.getUserName());
                             out.write(" <a href=\"user?method=detailUser\">个人资料</a>");
+                            if(loginUser.getLevel()==User.ENTERPRISE_USER||loginUser.getLevel()==User.MANAGER) {
+                                out.write(" <a href=\"enterprise?method=detailEnterprise\"> 企业管理</a>");
+                            }
+                            if(loginUser.getLevel()==User.ENTERPRISE_USER||loginUser.getLevel()==User.MANAGER) {
+                                out.write(" <a href=\"enterprise?method=certifyEnterprise\"> 企业审核</a>");
+                            }
                         }else {
                             out.write("游客，<a href=\"index.jsp\">点击这里登录</a>");
                         }

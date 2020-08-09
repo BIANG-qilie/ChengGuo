@@ -136,6 +136,19 @@
                                         }
                                     %>
                                 </table>
+                                <table width="868" height="18" class="d-xi-b">
+                                    <tr>
+                                        <th>
+                                            <a href="pageChange()">上一页</a>
+                                        </th>
+                                        <th>
+                                            <a href="pageChange(1)">首页</a>
+                                        </th>
+                                        <th>
+                                            <a href="pageChange()">下一页</a>
+                                        </th>
+                                    </tr>
+                                </table>
                             </div>
                     </div>
                 </div>

@@ -39,4 +39,5 @@ public class DemandUserDaoImpl implements IDemandUserDao {
         return queryRunner.query(sql,new ArrayListHandler(),userId);
     }
 
+
 }

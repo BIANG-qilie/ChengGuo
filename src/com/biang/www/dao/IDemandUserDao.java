@@ -13,4 +13,5 @@ public interface IDemandUserDao {
     List<Demand> queryByUserId(int userId) throws Exception;
 
     List<Object[]> queryConditionOfApplyByUserByUserId(int userId) throws Exception;
+
 }
