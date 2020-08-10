@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,7 +46,13 @@ public class EnterpriseServlet extends BaseServlet {
             }
         }
 
-        List<Demand> demands=demandUserService.getDemandByEnterprise(enterprise);
+        List<Demand> allDemands=demandUserService.getDemandByEnterprise(enterprise);
+        int pageNumberInDetailEnterprise=Integer.parseInt ((session.getAttribute("pageNumberInDetailEnterprise")!=null)?((String)session.getAttribute("pageNumberInDetailEnterprise")):"1");
+        List<Demand> demands=new ArrayList<>() ;
+        for(int i = DemandServlet.MAX_NUMBER_OF_MESSAGES*(pageNumberInDetailEnterprise-1); i< Integer.min(DemandServlet.MAX_NUMBER_OF_MESSAGES*pageNumberInDetailEnterprise,allDemands.size()); i++){
+            demands.add(allDemands.get(i));
+        }
+        session.setAttribute("pageNumberInDetailEnterprise",String.valueOf(pageNumberInDetailEnterprise));
         session.setAttribute("enterprise",enterprise);
         session.setAttribute("demands",demands);
         response.sendRedirect(request.getContextPath() + "/detailEnterprise.jsp");

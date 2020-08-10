@@ -24,6 +24,7 @@
             $.get("demand",
                 {
                     method:"pageChange",
+                    pageNumberName:"pageNumber",
                     pageNumber:page ,
                 },
                 function(){

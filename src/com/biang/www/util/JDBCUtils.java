@@ -15,7 +15,7 @@ public class JDBCUtils  {
         DataSource dbcp = null ;
         Properties props = new Properties();
         InputStream input = new JDBCUtils().getClass().getClassLoader().getResourceAsStream("dbcpconfig.properties");
-        props.load(  input );
+        props.load( input );
         dbcp = BasicDataSourceFactory.createDataSource(props) ;
         return dbcp;
     }

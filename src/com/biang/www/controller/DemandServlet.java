@@ -57,6 +57,7 @@ public class DemandServlet extends BaseServlet {
         for(int i = MAX_NUMBER_OF_MESSAGES*(pageNumber-1); i< Integer.min(MAX_NUMBER_OF_MESSAGES*pageNumber,allDemands.size()); i++){
             demands.add(allDemands.get(i));
         }
+
         session.setAttribute("demands",demands);
         session.setAttribute("sizeOfDemands",allDemands.size());
         session.setAttribute("pageNumber",String.valueOf(pageNumber));
@@ -75,8 +76,9 @@ public class DemandServlet extends BaseServlet {
     public void pageChange(HttpServletRequest request, HttpServletResponse response)
             throws Exception{
         String pageNumber =  request.getParameter("pageNumber");
+        String pageNumberName = request.getParameter("pageNumberName");
         HttpSession session=request.getSession();
-        session.setAttribute("pageNumber",pageNumber);
+        session.setAttribute(pageNumberName,pageNumber);
         reloadDemand(request,response);
     }
     public void query(HttpServletRequest request, HttpServletResponse response)

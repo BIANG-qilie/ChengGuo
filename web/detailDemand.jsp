@@ -58,7 +58,7 @@
                         <div class="fl bj-num">
                             <ul>
                                 <li>
-                                    <label >预计</label>
+                                    <label >预算</label>
                                     <span class="lab_l"><i><%=demand.getBudget()%></i></span> </li>
                                 <li>
                                     <label >简介</label>

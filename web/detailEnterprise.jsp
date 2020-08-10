@@ -21,6 +21,15 @@
         if(loginUser==null){
             response.sendRedirect(request.getContextPath() + "/index.jsp");
         }
+
+        int pageNumberInDetailEnterprise;
+        if(session.getAttribute("pageNumberInDetailEnterprise")==null){
+            request.getRequestDispatcher("enterprise?method=detailEnterprise").forward(request, response);
+            return;
+        }
+         pageNumberInDetailEnterprise=Integer.parseInt((String)session.getAttribute("pageNumberInDetailEnterprise"));
+
+
         Enterprise enterprise= (Enterprise) session.getAttribute("enterprise");
         List<Demand> demands= (List<Demand>) session.getAttribute("demands");
         String conditionOfCertificationEnterprise;
@@ -42,6 +51,24 @@
     <title>企业管理</title>
     <script type="text/javascript" src="js/returnTo.js"></script>
     <link rel="stylesheet" type="text/css" href="css/detailDemand.css"/>
+    <script type="text/javascript" src="js/jquery-3.3.1.js"></script>
+    <script type="text/javascript">
+        function pageChange(page){
+            if(page<1)
+                page=1;
+            $.get("demand",
+                {
+                    method:"pageChange",
+                    pageNumberName:"pageNumberInDetailEnterprise",
+                    pageNumber:page,
+                },
+                function(){
+                    window.location.href="enterprise?method=detailEnterprise";
+                }
+            );
+
+        }
+    </script>
 </head>
 <body>
 <body>
@@ -127,13 +154,20 @@
                             <table width="868" height="18" class="d-xi-b">
                                 <tr>
                                     <th>
-                                        <a href="pageChange()">上一页</a>
+                                        当前第<%=pageNumberInDetailEnterprise%>页
+                                    </th>
+                                </tr>
+                            </table>
+                            <table width="868" height="18" class="d-xi-b">
+                                <tr>
+                                    <th>
+                                        <a href="javascript:pageChange(<%=pageNumberInDetailEnterprise-1%>);">上一页</a>
                                     </th>
                                     <th>
-                                        <a href="pageChange(1)">首页</a>
+                                        <a href="javascript:pageChange(1);">首页</a>
                                     </th>
                                     <th>
-                                        <a href="pageChange()">下一页</a>
+                                        <a href="javascript:pageChange(<%=pageNumberInDetailEnterprise+1%>);">下一页</a>
                                     </th>
                                 </tr>
                             </table>

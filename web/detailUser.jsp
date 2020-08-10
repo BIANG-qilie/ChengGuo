@@ -22,9 +22,33 @@
             response.sendRedirect(request.getContextPath() + "/index.jsp");
         }
         List<Demand> demands= (List<Demand>) session.getAttribute("demands");
+        int pageNumberInDetailUser;
+        if(session.getAttribute("pageNumberInDetailUser")==null){
+            request.getRequestDispatcher("user?method=detailUser").forward(request, response);
+            return;
+        }
+        pageNumberInDetailUser=Integer.parseInt((String)session.getAttribute("pageNumberInDetailUser"));
+
     %>
     <link rel="stylesheet" type="text/css" href="css/detailDemand.css"/>
     <script type="text/javascript" src="js/returnTo.js"></script>
+    <script type="text/javascript" src="js/jquery-3.3.1.js"></script>
+    <script type="text/javascript">
+        function pageChange(page){
+            if(page<1)
+                page=1;
+            $.get("demand",
+                {
+                    method:"pageChange",
+                    pageNumberName:"pageNumberInDetailUser",
+                    pageNumber:page,
+                },
+                function(){
+                    window.location.href="user?method=detailUser";
+                });
+
+        }
+    </script>
 </head>
 <body>
 <div class="content-buy w1190">
@@ -139,13 +163,20 @@
                                 <table width="868" height="18" class="d-xi-b">
                                     <tr>
                                         <th>
-                                            <a href="pageChange()">上一页</a>
+                                            当前第<%=pageNumberInDetailUser%>页
+                                        </th>
+                                    </tr>
+                                </table>
+                                <table width="868" height="18" class="d-xi-b">
+                                    <tr>
+                                        <th>
+                                            <a href="javascript:pageChange(<%=pageNumberInDetailUser-1%>);">上一页</a>
                                         </th>
                                         <th>
-                                            <a href="pageChange(1)">首页</a>
+                                            <a href="javascript:pageChange(1);">首页</a>
                                         </th>
                                         <th>
-                                            <a href="pageChange()">下一页</a>
+                                            <a href="javascript:pageChange(<%=pageNumberInDetailUser+1%>);">下一页</a>
                                         </th>
                                     </tr>
                                 </table>

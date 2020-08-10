@@ -15,7 +15,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.biang.www.controller.DemandServlet.MAX_NUMBER_OF_MESSAGES;
 
 /**
  * @author BIANG
@@ -197,17 +200,28 @@ public class UserServlet extends BaseServlet {
             throws Exception{
         HttpSession session=request.getSession();
         User loginUser=(User)session.getAttribute("loginUser");
-        List<Demand> demands=demandUserService.getDemandByUser(loginUser);
+        List<Demand> allDemands=demandUserService.getDemandByUser(loginUser);
         List<Object[]> conditionsOfApply=demandUserService.getConditionOfApplyByUser(loginUser);
-        for(int i=0;i<demands.size();i++){
-            int demandId=demands.get(i).getDemandId();
+        for(int i=0;i<allDemands.size();i++){
+            int demandId=allDemands.get(i).getDemandId();
             for(int j=0;j<conditionsOfApply.size();j++){
                 if(demandId==(int)conditionsOfApply.get(j)[0]){
-                    demands.get(i).setConditionOfApply((int)conditionsOfApply.get(j)[1]);
+                    allDemands.get(i).setConditionOfApply((int)conditionsOfApply.get(j)[1]);
                     break;
                 }
             }
         }
+        int pageNumberInDetailUser;
+        if(session.getAttribute("pageNumberInDetailUser")!=null) {
+            pageNumberInDetailUser = Integer.parseInt((String) session.getAttribute("pageNumberInDetailUser"));
+        }else{
+            pageNumberInDetailUser=1;
+        }
+        List<Demand> demands=new ArrayList<>() ;
+        for(int i = DemandServlet.MAX_NUMBER_OF_MESSAGES*(pageNumberInDetailUser-1); i< Integer.min(DemandServlet.MAX_NUMBER_OF_MESSAGES*pageNumberInDetailUser,allDemands.size()); i++){
+            demands.add(allDemands.get(i));
+        }
+        session.setAttribute("pageNumberInDetailUser",String.valueOf(pageNumberInDetailUser));
         session.setAttribute("demands",demands);
         request.getRequestDispatcher("detailUser.jsp").forward(request, response);
     }
