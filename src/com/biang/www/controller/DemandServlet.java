@@ -83,10 +83,14 @@ public class DemandServlet extends BaseServlet {
             throws Exception{
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
+        String queryContent= request.getParameter("queryContent");
+        if(queryContent.equals("")){
+            reloadDemand(request, response);
+            return;
+        }
         HttpSession session=request.getSession();
         User loginUser= (User) session.getAttribute("loginUser");
         List<Demand> allDemands=new ArrayList<>() ;
-        String queryContent= request.getParameter("queryContent");
         switch ((loginUser==null)?-10086:loginUser.getLevel()) {
             case User.MANAGER:
                 //看得到所有需求
@@ -113,5 +117,34 @@ public class DemandServlet extends BaseServlet {
         session.setAttribute("sizeOfDemands",allDemands.size());
         session.setAttribute("pageNumber",String.valueOf(pageNumber));
         request.getRequestDispatcher("main.jsp").forward(request, response);
+    }
+    public void addDemand(HttpServletRequest request, HttpServletResponse response)
+            throws Exception{
+        String title=request.getParameter("title");
+        String introduction=request.getParameter("introduction");
+        String specificContent=request.getParameter("specificContent");
+        String demandUnits=request.getParameter("demandUnits");
+        String budget=request.getParameter("budget");
+        String timeRequirement=request.getParameter("timeRequirement");
+        HttpSession session=request.getSession();
+        session.removeAttribute("pageNumber");
+        Enterprise enterprise= (Enterprise) session.getAttribute("enterprise");
+        Demand demand=new Demand();
+        demand.setTitle(title);
+        demand.setIntroduction(introduction);
+        demand.setSpecificContent(specificContent);
+        demand.setDemandUnits(demandUnits);
+        demand.setBudget(budget);
+        demand.setTimeRequirement(timeRequirement);
+        demand.setEnterpriseId(enterprise.getEnterpriseId());
+        if(demandService.addDemand(demand)){
+            //发布成功
+            response.getWriter().write("<script type=\"text/javascript\">alert(\"发布成功\")</script>");
+            response.sendRedirect(request.getContextPath() + "/enterprise?method=detailEnterprise");
+        }else{
+            //发布失败
+            EmailSender emailSender=new EmailSender();
+            emailSender.ErrorReport("发布需求失败", demand);
+        }
     }
 }

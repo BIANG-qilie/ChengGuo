@@ -54,4 +54,9 @@ public class DemandServiceImpl implements IDemandService {
     public List<Demand> getDemandByEnterprise(Enterprise enterprise) throws Exception {
         return demandDao.queryByEnterpriseId(enterprise.getEnterpriseId());
     }
+
+    @Override
+    public boolean addDemand(Demand demand) throws Exception {
+        return demandDao.insert(demand);
+    }
 }

@@ -23,4 +23,6 @@ public interface IDemandService {
     List<Demand> queryFromPassCertificationDemand(String queryContent) throws Exception;
 
     List<Demand> getDemandByEnterprise(Enterprise enterprise) throws Exception;
+
+    boolean addDemand(Demand demand) throws Exception;
 }

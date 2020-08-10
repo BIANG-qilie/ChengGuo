@@ -18,21 +18,24 @@
     <%
         IUserService userService=new UserServiceImpl();
         User loginUser=(User)session.getAttribute("loginUser");
+        if(loginUser==null){
+            response.sendRedirect(request.getContextPath() + "/index.jsp");
+        }
         Enterprise enterprise= (Enterprise) session.getAttribute("enterprise");
         List<Demand> demands= (List<Demand>) session.getAttribute("demands");
-        String conditionOfCertification;
+        String conditionOfCertificationEnterprise;
         switch (enterprise.getConditionsOfCertification()){
             case Certification.NOT_PASS_CERTIFICATION:
-                conditionOfCertification="认证未通过";
+                conditionOfCertificationEnterprise ="认证未通过";
                 break;
             case Certification.CERTIFICATION_AUDITING:
-                conditionOfCertification="认证中";
+                conditionOfCertificationEnterprise ="认证中";
                 break;
             case Certification.PASS_CERTIFICATION:
-                conditionOfCertification="认证已通过";
+                conditionOfCertificationEnterprise ="认证已通过";
                 break;
             default:
-                conditionOfCertification="认证异常";
+                conditionOfCertificationEnterprise ="认证异常";
                 break;
         }
     %>
@@ -58,7 +61,7 @@
                                 <span class="lab_l"><%=enterprise.getContactPerson()%></span> </li>
                             <li>
                                 <label >认证情况</label>
-                                <span class="lab_l"><%=conditionOfCertification%></span> </li>
+                                <span class="lab_l"><%=conditionOfCertificationEnterprise%></span> </li>
                             <li>
                                 <label >注册用户</label>
                                 <span class="lab_l"><%=userService.getUserByUserId(enterprise.getUserId()).getUserName()%></span></li>
@@ -77,8 +80,8 @@
                                 <tr>
                                     <th>需求名</th>
                                     <th>需求单位</th>
-                                    <th>预计</th>
-                                    <th>时间要求</th>
+                                    <th>预算</th>
+                                    <th>审核情况</th>
                                 </tr>
                                 <%
                                     for(int i = 0; i< DemandServlet.MAX_NUMBER_OF_MESSAGES; i++) {
@@ -92,12 +95,27 @@
                                                     "                                    </tr>");
                                         }else {
                                             Demand demand = demands.get(i);
+                                            String conditionOfCertificationDemand;
+                                            switch (demand.getConditionOfCertification()){
+                                                case Certification.NOT_PASS_CERTIFICATION:
+                                                    conditionOfCertificationDemand="审核未通过";
+                                                    break;
+                                                case Certification.CERTIFICATION_AUDITING:
+                                                    conditionOfCertificationDemand="审核中";
+                                                    break;
+                                                case Certification.PASS_CERTIFICATION:
+                                                    conditionOfCertificationDemand="审核已通过";
+                                                    break;
+                                                default:
+                                                    conditionOfCertificationDemand="审核异常";
+                                                    break;
+                                            }
                                             try {
                                                 out.print("<tr class=\"d-xi-b\">\n" +
                                                         "                                        <th><a href=\"demand?method=detailDemand&demandId="+demand.getDemandId()+"\">" + demand.getTitle() + "</a></th>\n" +
                                                         "                                        <th>" + demand.getDemandUnits() + "</th>\n" +
                                                         "                                        <th>" + demand.getBudget() + "</th>\n" +
-                                                        "                                        <th>" + demand.getTimeRequirement() + "</th>\n" +
+                                                        "                                        <th>" + conditionOfCertificationDemand + "</th>\n" +
                                                         "                                    </tr>");
                                             } catch (Exception e) {
                                                 e.printStackTrace();
@@ -129,20 +147,12 @@
 <table align="center" border="0" width="300" height="18" cellspacing="0">
     <tr>
         <th>
-            <form action="demand" method="post">
-                <input type="hidden" name="method" value="addDemand"/>
-                <input  type="submit" style="width: 80px" value="发布需求"/>
-            </form>
-        </th>
-    </tr>
-</table>
-<table align="center" border="0" width="300" height="18" cellspacing="0">
-    <tr>
-        <th>
             <script type="text/javascript">
-                var url="main.jsp";
+                var urlToAddDemand="addDemand.jsp";
+                var urlToMain="main.jsp";
             </script>
-            <button onclick="returnTo(url)" style="width: 80px">返回</button>
+            <button onclick="returnTo(urlToAddDemand)" style="width: 80px">发布需求</button>
+            <button onclick="returnTo(urlToMain)" style="width: 80px">返回</button>
         </th>
     </tr>
 </table>

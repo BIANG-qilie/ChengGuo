@@ -4,6 +4,9 @@ import com.biang.www.po.Demand;
 
 import java.util.List;
 
+/**
+ * @author BIANG
+ */
 public interface IDemandDao {
     List<Demand> queryAllDemand() throws Exception;
 
@@ -20,4 +23,7 @@ public interface IDemandDao {
     List<Demand> queryFromPassCertificationDemand(int conditionsOfCertification,String queryContent) throws Exception;
 
     List<Demand> queryByEnterpriseIdAndConditionOfCertification(int enterpriseId, int conditionOfCertification) throws Exception;
+
+    boolean insert(Demand demand) throws Exception;
+
 }

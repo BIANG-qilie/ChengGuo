@@ -93,4 +93,11 @@ public class DemandDaompl implements IDemandDao {
         String sql="select * from demand WHERE enterpriseId=? OR conditionOfCertification=?";
         return queryRunner.query(sql,new BeanListHandler<>(Demand.class),enterpriseId,conditionOfCertification);
     }
+
+    @Override
+    public boolean insert(Demand demand) throws Exception {
+        QueryRunner queryRunner=new QueryRunner(JDBCUtils.getDataSourceWIthDBCPByProperties());
+        String sql="INSERT INTO demand VALUES(default,?,?,?,?,?,?,?,default,default)";
+        return queryRunner.update(sql,demand.getTitle(),demand.getIntroduction(),demand.getSpecificContent(),demand.getDemandUnits(),demand.getBudget(),demand.getTimeRequirement(),demand.getEnterpriseId()) > 0;
+    }
 }

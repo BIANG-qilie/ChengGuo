@@ -168,4 +168,20 @@ public class Demand {
     public void setConditionOfApply(int conditionOfApply) {
         this.conditionOfApply = conditionOfApply;
     }
+
+    @Override
+    public String toString(){
+        return "需求ID:"+demandId+" \n"+
+                "标题:"+title+" \n"+
+                "简介:"+introduction+" \n"+
+                "详细介绍:"+specificContent+" \n"+
+                "需求单位:"+demandUnits+" \n"+
+                "预计:"+budget+" \n"+
+                "时间要求:"+timeRequirement+" \n"+
+                "附件:"+annexes+" \n"+
+                "企业ID:"+enterpriseId+" \n"+
+                "审核情况:"+conditionOfCertification+" \n"+
+                "报名情况:"+conditionOfApply+" \n"+
+                "需求情况:"+conditionOfDemand+" \n";
+    }
 }
