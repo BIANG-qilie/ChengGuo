@@ -3,10 +3,10 @@ package com.biang.www.service.impl;
 import com.biang.www.dao.IDemandUserDao;
 import com.biang.www.dao.impl.DemandUserDaoImpl;
 import com.biang.www.po.Demand;
-import com.biang.www.po.Enterprise;
 import com.biang.www.po.User;
 import com.biang.www.service.IDemandUserService;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class DemandUserServiceImpl implements IDemandUserService {
@@ -28,7 +28,17 @@ public class DemandUserServiceImpl implements IDemandUserService {
 
     @Override
     public List<Object[]> getConditionOfApplyByUser(User user) throws Exception {
-        return demandUserDao.queryConditionOfApplyByUserByUserId(user.getUserId());
+        return demandUserDao.queryDemandIdAndConditionOfApplyByUserId(user.getUserId());
+    }
+
+    @Override
+    public List<Object[]> getConditionOfApplyByDemand(Demand demand) throws Exception {
+        return demandUserDao.queryDemandIdAndConditionOfApplyByDemandId(demand.getDemandId());
+    }
+
+    @Override
+    public boolean changeConditionOfApplyByUserIdAndDemandId(int userId, int demandId, int conditionOfApply) throws SQLException {
+        return demandUserDao.updateConditionOfApplyByUserIdAndDemandId(userId,demandId,conditionOfApply);
     }
 
 

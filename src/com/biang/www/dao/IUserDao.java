@@ -2,8 +2,6 @@ package com.biang.www.dao;
 
 import com.biang.www.po.User;
 
-import java.sql.SQLException;
-
 /**
  * @author BIANG
  */
@@ -18,4 +16,6 @@ public interface IUserDao {
     User queryByEmail(String email) throws Exception;
 
     User queryByUserId(int loginUserId) throws Exception;
+
+    boolean updateLevel(User user, int level) throws Exception;
 }

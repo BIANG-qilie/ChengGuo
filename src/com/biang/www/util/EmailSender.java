@@ -156,7 +156,7 @@ public class EmailSender {
                 "<a href=\"http://localhost:8080/ChengGuo_war_exploded/\">成果交易系统主页</a>";
         mailHost="smtp.qq.com";
     }
-    public void ErrorReport(String errorContent,Object object) throws GeneralSecurityException, MessagingException {
+    public void errorReport(String errorContent, Object object) throws GeneralSecurityException, MessagingException {
         mailFrom="2947296752@qq.com";
         mailFromPassword="lxakfuebeogoddif";
         mailTo="921097712@qq.com";

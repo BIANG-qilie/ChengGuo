@@ -20,9 +20,9 @@
 
 .bj-num{width: 450px;height:auto;clear:both}
 .bj-num ul{overflow: hidden;clear: both}
-.bj-num ul li{float: left;width:220px;height:36px;line-height:30px;margin-right: 5px;}
+.bj-num ul li{float: left;width:266px;height:36px;line-height:30px;margin-right: 5px;}
 .bj-num ul li label{width:85px;height: 30px;line-height: 30px;float: left;color: #888;font-size: 14px;text-align: center;}
-.bj-num ul li span.lab_l{float: left;font-size: 14px;color: #555;width: 134px;height: 30px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+.bj-num ul li span.lab_l{float: left;font-size: 14px;color: #555;width: 181px;height: 30px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
 .bj-num ul li span i{font-style: normal;color: #e93a38;font-size:22px;}
 
 

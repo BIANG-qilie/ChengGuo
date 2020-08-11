@@ -6,6 +6,8 @@ import com.biang.www.po.Enterprise;
 import com.biang.www.po.User;
 import com.biang.www.service.IEnterpriseService;
 
+import java.util.List;
+
 public class EnterpriseServiceImpl implements IEnterpriseService {
     IEnterpriseDao enterpriseDao=new EnterpriseDaoImpl();
     @Override
@@ -16,5 +18,20 @@ public class EnterpriseServiceImpl implements IEnterpriseService {
     @Override
     public Enterprise getEnterpriseByUser(User user) throws Exception {
         return enterpriseDao.queryByUserId(user.getUserId());
+    }
+
+    @Override
+    public boolean addEnterprise(Enterprise enterprise) throws Exception {
+        return enterpriseDao.insert(enterprise);
+    }
+
+    @Override
+    public List<Enterprise> getAllEnterprise() throws Exception {
+        return enterpriseDao.queryAllEnterprise();
+    }
+
+    @Override
+    public boolean changeEnterpriseCertification(Enterprise enterprise, int conditionsOfCertification) throws Exception {
+        return enterpriseDao.updateConditionsOfCertification(enterprise,conditionsOfCertification);
     }
 }

@@ -4,6 +4,7 @@ import com.biang.www.po.Demand;
 import com.biang.www.po.Enterprise;
 import com.biang.www.po.User;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
@@ -25,4 +26,10 @@ public interface IDemandService {
     List<Demand> getDemandByEnterprise(Enterprise enterprise) throws Exception;
 
     boolean addDemand(Demand demand) throws Exception;
+
+    List<Demand> getNotYetPassedDemandByEnterprise(Enterprise enterprise) throws Exception;
+
+    boolean changeDemandCertification(Demand demand, int conditionOfCertification) throws Exception;
+
+    boolean changeDemandConditionOfDemand(int demandId, int conditionOfDemand) throws SQLException;
 }

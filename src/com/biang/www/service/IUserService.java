@@ -19,4 +19,6 @@ public interface IUserService {
     User isEmailExist(User user) throws Exception;
 
     User getUserByUserId(int loginUserId) throws Exception;
+
+    boolean upgrade(User user) throws Exception;
 }

@@ -1,26 +1,20 @@
 package com.biang.www.controller;
 
-import com.biang.www.dao.IEnterpriseDao;
-import com.biang.www.dao.impl.EnterpriseDaoImpl;
 import com.biang.www.po.Demand;
 import com.biang.www.po.Enterprise;
 import com.biang.www.po.User;
 import com.biang.www.service.IDemandService;
+import com.biang.www.service.IDemandUserService;
 import com.biang.www.service.IEnterpriseService;
-import com.biang.www.service.IUserService;
 import com.biang.www.service.impl.DemandServiceImpl;
+import com.biang.www.service.impl.DemandUserServiceImpl;
 import com.biang.www.service.impl.EnterpriseServiceImpl;
-import com.biang.www.service.impl.UserServiceImpl;
 import com.biang.www.util.EmailSender;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.*;
 
 /**
@@ -29,6 +23,7 @@ import java.util.*;
 @WebServlet("/demand")
 public class DemandServlet extends BaseServlet {
     IDemandService demandService=new DemandServiceImpl();
+    IDemandUserService demandUserService=new DemandUserServiceImpl();
     IEnterpriseService enterpriseService=new EnterpriseServiceImpl();
     public static final int MAX_NUMBER_OF_MESSAGES=5;
     public void reloadDemand(HttpServletRequest request, HttpServletResponse response)
@@ -57,7 +52,6 @@ public class DemandServlet extends BaseServlet {
         for(int i = MAX_NUMBER_OF_MESSAGES*(pageNumber-1); i< Integer.min(MAX_NUMBER_OF_MESSAGES*pageNumber,allDemands.size()); i++){
             demands.add(allDemands.get(i));
         }
-
         session.setAttribute("demands",demands);
         session.setAttribute("sizeOfDemands",allDemands.size());
         session.setAttribute("pageNumber",String.valueOf(pageNumber));
@@ -86,7 +80,7 @@ public class DemandServlet extends BaseServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         String queryContent= request.getParameter("queryContent");
-        if(queryContent.equals("")){
+        if("".equals(queryContent)){
             reloadDemand(request, response);
             return;
         }
@@ -141,12 +135,64 @@ public class DemandServlet extends BaseServlet {
         demand.setEnterpriseId(enterprise.getEnterpriseId());
         if(demandService.addDemand(demand)){
             //发布成功
-            response.getWriter().write("<script type=\"text/javascript\">alert(\"发布成功\")</script>");
             response.sendRedirect(request.getContextPath() + "/enterprise?method=detailEnterprise");
         }else{
             //发布失败
             EmailSender emailSender=new EmailSender();
-            emailSender.ErrorReport("发布需求失败", demand);
+            emailSender.errorReport("发布需求失败", demand);
         }
+    }
+    public void changeConditionOfDemand(HttpServletRequest request, HttpServletResponse response)
+            throws Exception{
+        int conditionOfDemand= Integer.parseInt(request.getParameter("conditionOfDemand"));
+        int demandId=Integer.parseInt(request.getParameter("demandId"));
+        HttpSession session=request.getSession();
+        Enterprise enterprise= (Enterprise) session.getAttribute("enterprise");
+        User loginUser=(User)session.getAttribute("loginUser");
+        if(loginUser==null){
+            response.sendRedirect(request.getContextPath() + "/index.jsp");
+        }
+        if(enterprise.getUserId()!=loginUser.getUserId()){
+            response.sendRedirect(request.getContextPath() + "/main.jsp");
+        }
+        if(demandService.changeDemandConditionOfDemand(demandId,conditionOfDemand)){
+            //改变需求状态成功
+            response.sendRedirect(request.getContextPath() + "/demand?method=detailDemand&demandId="+demandId);
+        }else{
+            //改变需求状态异常
+            EmailSender emailSender=new EmailSender();
+            emailSender.errorReport("改变需求状态异常",demandId);
+        }
+    }
+    public void certifyDemand(HttpServletRequest request, HttpServletResponse response)
+            throws Exception{
+        HttpSession session=request.getSession();
+        Demand demand= (Demand) session.getAttribute("demand");
+        Enterprise enterprise= (Enterprise) session.getAttribute("enterprise");
+        User loginUser=(User)session.getAttribute("loginUser");
+        if(loginUser==null){
+            response.sendRedirect(request.getContextPath() + "/index.jsp");
+        }
+        if(enterprise.getUserId()!=loginUser.getUserId()){
+            response.sendRedirect(request.getContextPath() + "/main.jsp");
+        }
+        List<Object[]> allConditionsOfApply= demandUserService.getConditionOfApplyByDemand(demand);
+        int pageNumberInCertifyDemand;
+        if(session.getAttribute("pageNumberInCertifyDemand")!=null) {
+            pageNumberInCertifyDemand = Integer.parseInt((String) session.getAttribute("pageNumberInCertifyDemand"));
+        }else{
+            pageNumberInCertifyDemand=1;
+        }
+        List<Object[]> conditionsOfApply=new ArrayList<>() ;
+        if(allConditionsOfApply!=null) {
+            if (allConditionsOfApply != null) {
+                for (int i = DemandServlet.MAX_NUMBER_OF_MESSAGES * (pageNumberInCertifyDemand - 1); i < Integer.min(DemandServlet.MAX_NUMBER_OF_MESSAGES * pageNumberInCertifyDemand, allConditionsOfApply.size()); i++) {
+                    conditionsOfApply.add(allConditionsOfApply.get(i));
+                }
+            }
+        }
+        session.setAttribute("conditionsOfApply", conditionsOfApply);
+        session.setAttribute("pageNumberInCertifyDemand",String.valueOf(pageNumberInCertifyDemand));
+        response.sendRedirect(request.getContextPath() + "/certifyDemand.jsp");
     }
 }

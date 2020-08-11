@@ -27,7 +27,7 @@
             request.getRequestDispatcher("enterprise?method=detailEnterprise").forward(request, response);
             return;
         }
-         pageNumberInDetailEnterprise=Integer.parseInt((String)session.getAttribute("pageNumberInDetailEnterprise"));
+        pageNumberInDetailEnterprise=Integer.parseInt((String)session.getAttribute("pageNumberInDetailEnterprise"));
 
 
         Enterprise enterprise= (Enterprise) session.getAttribute("enterprise");
@@ -69,8 +69,17 @@
 
         }
     </script>
+    <script type="text/javascript">
+        function checkPass(){
+            if(<%=enterprise.getConditionsOfCertification()!=Certification.PASS_CERTIFICATION%>){
+                alert("您的认证还没有通过，不可发布需求");
+                return false;
+            }else {
+                return true;
+            }
+        }
+    </script>
 </head>
-<body>
 <body>
 <div class="content-buy w1190">
     <div class="c-left fl">
@@ -185,11 +194,10 @@
                 var urlToAddDemand="addDemand.jsp";
                 var urlToMain="main.jsp";
             </script>
-            <button onclick="returnTo(urlToAddDemand)" style="width: 80px">发布需求</button>
+            <button onclick="return checkPass()&&returnTo(urlToAddDemand)" style="width: 80px">发布需求</button>
             <button onclick="returnTo(urlToMain)" style="width: 80px">返回</button>
         </th>
     </tr>
 </table>
-</body>
 </body>
 </html>

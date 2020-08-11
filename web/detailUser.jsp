@@ -66,7 +66,7 @@
                                         <%
                                             switch (loginUser.getLevel()){
                                                 case User.COMMON_USER:
-                                                    out.write("普通用户 <a href=\"user?method=upgrade\">升级用户</a>");
+                                                    out.write("普通用户");
                                                     break;
                                                 case User.ENTERPRISE_USER:
                                                     out.write("企业用户");
@@ -80,6 +80,7 @@
                                             }
                                         %>
                                     </i>
+                                    <%=((loginUser.getLevel()==User.COMMON_USER)?"<a href=\"upgrade.jsp\">升级用户</a>":"")%>
                                 </span> </li>
                             <li>
                                 <label >邮箱</label>

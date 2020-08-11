@@ -51,7 +51,7 @@
                             if(loginUser.getLevel()==User.ENTERPRISE_USER||loginUser.getLevel()==User.MANAGER) {
                                 out.write(" <a href=\"enterprise?method=detailEnterprise\"> 企业管理</a>");
                             }
-                            if(loginUser.getLevel()==User.ENTERPRISE_USER||loginUser.getLevel()==User.MANAGER) {
+                            if(loginUser.getLevel()==User.MANAGER) {
                                 out.write(" <a href=\"enterprise?method=certifyEnterprise\"> 企业审核</a>");
                             }
                         }else {

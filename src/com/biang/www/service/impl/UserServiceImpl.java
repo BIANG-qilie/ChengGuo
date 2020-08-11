@@ -44,5 +44,10 @@ public class UserServiceImpl implements IUserService {
     public User getUserByUserId(int loginUserId) throws Exception {
         return userDao.queryByUserId(loginUserId);
     }
+
+    @Override
+    public boolean upgrade(User user) throws Exception {
+        return userDao.updateLevel(user,User.ENTERPRISE_USER);
+    }
 }
 

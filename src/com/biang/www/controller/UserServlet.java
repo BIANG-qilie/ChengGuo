@@ -1,10 +1,13 @@
 package com.biang.www.controller;
 
 import com.biang.www.po.Demand;
+import com.biang.www.po.Enterprise;
 import com.biang.www.po.User;
 import com.biang.www.service.IDemandUserService;
+import com.biang.www.service.IEnterpriseService;
 import com.biang.www.service.IUserService;
 import com.biang.www.service.impl.DemandUserServiceImpl;
+import com.biang.www.service.impl.EnterpriseServiceImpl;
 import com.biang.www.service.impl.UserServiceImpl;
 import com.biang.www.util.CommonUtil;
 import com.biang.www.util.EmailSender;
@@ -18,8 +21,6 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.biang.www.controller.DemandServlet.MAX_NUMBER_OF_MESSAGES;
-
 /**
  * @author BIANG
  */
@@ -27,6 +28,7 @@ import static com.biang.www.controller.DemandServlet.MAX_NUMBER_OF_MESSAGES;
 public class UserServlet extends BaseServlet {
     IUserService userService=new UserServiceImpl();
     IDemandUserService demandUserService=new DemandUserServiceImpl();
+    IEnterpriseService enterpriseService=new EnterpriseServiceImpl();
     public void login(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         request.setCharacterEncoding("UTF-8");
@@ -99,7 +101,7 @@ public class UserServlet extends BaseServlet {
                         //未知的异常
                         request.getSession().setAttribute("registerError",user);
                         EmailSender emailSender=new EmailSender();
-                        emailSender.ErrorReport("用户注册异常",  user);
+                        emailSender.errorReport("用户注册异常",  user);
                         request.getRequestDispatcher("register.jsp").forward(request, response);
                     }
                 }else{//异常 邮箱重复
@@ -191,7 +193,7 @@ public class UserServlet extends BaseServlet {
             //修改失败
             session.setAttribute("changePasswordError",changePasswordUser);
             EmailSender emailSender=new EmailSender();
-            emailSender.ErrorReport("密码修改异常",  changePasswordUser);
+            emailSender.errorReport("密码修改异常",  changePasswordUser);
             request.getRequestDispatcher("changePassword.jsp").forward(request, response);
         }
 
@@ -200,14 +202,20 @@ public class UserServlet extends BaseServlet {
             throws Exception{
         HttpSession session=request.getSession();
         User loginUser=(User)session.getAttribute("loginUser");
+        if(loginUser==null){
+            response.sendRedirect(request.getContextPath() + "/index.jsp");
+            return;
+        }
         List<Demand> allDemands=demandUserService.getDemandByUser(loginUser);
         List<Object[]> conditionsOfApply=demandUserService.getConditionOfApplyByUser(loginUser);
-        for(int i=0;i<allDemands.size();i++){
-            int demandId=allDemands.get(i).getDemandId();
-            for(int j=0;j<conditionsOfApply.size();j++){
-                if(demandId==(int)conditionsOfApply.get(j)[0]){
-                    allDemands.get(i).setConditionOfApply((int)conditionsOfApply.get(j)[1]);
-                    break;
+        if(allDemands!=null) {
+            for (int i = 0; i < allDemands.size(); i++) {
+                int demandId = allDemands.get(i).getDemandId();
+                for (int j = 0; j < conditionsOfApply.size(); j++) {
+                    if (demandId == (int) conditionsOfApply.get(j)[0]) {
+                        allDemands.get(i).setConditionOfApply((int) conditionsOfApply.get(j)[2]);
+                        break;
+                    }
                 }
             }
         }
@@ -218,8 +226,10 @@ public class UserServlet extends BaseServlet {
             pageNumberInDetailUser=1;
         }
         List<Demand> demands=new ArrayList<>() ;
-        for(int i = DemandServlet.MAX_NUMBER_OF_MESSAGES*(pageNumberInDetailUser-1); i< Integer.min(DemandServlet.MAX_NUMBER_OF_MESSAGES*pageNumberInDetailUser,allDemands.size()); i++){
-            demands.add(allDemands.get(i));
+        if(allDemands!=null) {
+            for (int i = DemandServlet.MAX_NUMBER_OF_MESSAGES * (pageNumberInDetailUser - 1); i < Integer.min(DemandServlet.MAX_NUMBER_OF_MESSAGES * pageNumberInDetailUser, allDemands.size()); i++) {
+                demands.add(allDemands.get(i));
+            }
         }
         session.setAttribute("pageNumberInDetailUser",String.valueOf(pageNumberInDetailUser));
         session.setAttribute("demands",demands);
@@ -245,5 +255,34 @@ public class UserServlet extends BaseServlet {
             response.sendRedirect(request.getContextPath() + "/changePassword.jsp");
         }
     }
-
+    public void upgrade(HttpServletRequest request, HttpServletResponse response)
+            throws Exception{
+        String enterpriseName=request.getParameter("enterpriseName");
+        String information=request.getParameter("information");
+        String contactPerson=request.getParameter("contactPerson");
+        Enterprise enterprise=new Enterprise();
+        enterprise.setEnterpriseName(enterpriseName);
+        enterprise.setInformation(information);
+        enterprise.setContactPerson(contactPerson);
+        HttpSession session=request.getSession();
+        User loginUser=(User)session.getAttribute("loginUser");
+        enterprise.setUserId(loginUser.getUserId());
+        if(enterpriseService.addEnterprise(enterprise)){
+            //认证成功
+            if(userService.upgrade(loginUser)){
+                //升级成功
+                User newVersionLoginUser=userService.getUserByUserId(loginUser.getUserId());
+                session.setAttribute("loginUser",newVersionLoginUser);
+            }else{
+                //升级失败
+                EmailSender emailSender=new EmailSender();
+                emailSender.errorReport("用户升级失败", loginUser);
+            }
+            response.sendRedirect(request.getContextPath() + "/user?method=detailUser");
+        }else{
+            //认证失败
+            EmailSender emailSender=new EmailSender();
+            emailSender.errorReport("企业认证失败", enterprise);
+        }
+    }
 }

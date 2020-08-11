@@ -1,18 +1,17 @@
 package com.biang.www.controller;
 
-import com.biang.www.dao.impl.DemandUserDaoImpl;
-import com.biang.www.dao.IDemandUserDao;
+import com.biang.www.po.Enterprise;
 import com.biang.www.po.User;
 import com.biang.www.service.IDemandUserService;
 import com.biang.www.service.impl.DemandUserServiceImpl;
 import com.biang.www.util.EmailSender;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * @author BIANG
@@ -30,7 +29,7 @@ public class DemandUserServlet extends BaseServlet {
         }else{
             //报名异常
             EmailSender emailSender=new EmailSender();
-            emailSender.ErrorReport("报名异常", loginUser);
+            emailSender.errorReport("报名异常", loginUser);
         }
         request.getRequestDispatcher("detailDemand.jsp").forward(request, response);
     }
@@ -48,5 +47,33 @@ public class DemandUserServlet extends BaseServlet {
         }
         out.flush();
         out.close();
+    }
+    public void changeConditionOfApply(HttpServletRequest request, HttpServletResponse response)
+            throws Exception{
+        HttpSession session=request.getSession();
+        Enterprise enterprise= (Enterprise) session.getAttribute("enterprise");
+        User loginUser=(User)session.getAttribute("loginUser");
+        if(loginUser==null){
+            response.sendRedirect(request.getContextPath() + "/index.jsp");
+        }
+        if(enterprise.getUserId()!=loginUser.getUserId()){
+            response.sendRedirect(request.getContextPath() + "/main.jsp");
+        }
+        List<Object[]> conditionsOfApply= (List<Object[]>) session.getAttribute("conditionsOfApply");
+        if(conditionsOfApply!=null){
+            for (int i=0;i< conditionsOfApply.size();i++){
+                int conditionOfApply= Integer.parseInt(request.getParameter("conditionOfApply"+conditionsOfApply.get(i)[1]));
+                if(demandUserService.changeConditionOfApplyByUserIdAndDemandId((int)conditionsOfApply.get(i)[1],(int)conditionsOfApply.get(i)[0],conditionOfApply)){
+                    //审核更新成功
+                }else {
+                    //审核更新失败
+                    EmailSender emailSender=new EmailSender();
+                    emailSender.errorReport("审核更新失败",conditionOfApply+" "+ conditionsOfApply.get(i)[1] +" "+ conditionsOfApply.get(i)[0]);
+                    break;
+                }
+                response.sendRedirect(request.getContextPath() + "/demand?method=certifyDemand");
+            }
+        }
+
     }
 }
