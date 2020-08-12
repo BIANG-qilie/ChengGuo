@@ -7,6 +7,7 @@ import com.biang.www.service.IDemandService;
 import com.biang.www.service.IEnterpriseService;
 import com.biang.www.service.impl.DemandServiceImpl;
 import com.biang.www.service.impl.EnterpriseServiceImpl;
+import com.biang.www.util.CommonUtil;
 import com.biang.www.util.EmailSender;
 
 import javax.servlet.annotation.WebServlet;
@@ -28,8 +29,7 @@ public class EnterpriseServlet extends BaseServlet {
             throws Exception {
         HttpSession session=request.getSession();
         User loginUser= (User) session.getAttribute("loginUser");
-        if(loginUser==null){
-            response.sendRedirect(request.getContextPath() + "/index.jsp");
+        if(CommonUtil.isLogin(request, response)){
             return;
         }
         Enterprise enterprise=enterpriseService.getEnterpriseByUser(loginUser);
@@ -58,7 +58,10 @@ public class EnterpriseServlet extends BaseServlet {
             throws Exception {
         HttpSession session=request.getSession();
         User loginUser= (User) session.getAttribute("loginUser");
-        if(!(loginUser!=null&&loginUser.getLevel()==User.MANAGER)){
+        if(CommonUtil.isLogin(request, response)){
+            return;
+        }
+        if(loginUser.getLevel()!=User.MANAGER){
             response.sendRedirect(request.getContextPath() + "/main.jsp");
             return;
         }
@@ -77,7 +80,10 @@ public class EnterpriseServlet extends BaseServlet {
         String enterpriseId=request.getParameter("enterpriseId");
         HttpSession session=request.getSession();
         User loginUser= (User) session.getAttribute("loginUser");
-        if(!(loginUser!=null&&loginUser.getLevel()==User.MANAGER)){
+        if(CommonUtil.isLogin(request, response)){
+            return;
+        }
+        if(loginUser.getLevel()!=User.MANAGER){
             response.sendRedirect(request.getContextPath() + "/main.jsp");
             return;
         }
@@ -98,7 +104,14 @@ public class EnterpriseServlet extends BaseServlet {
         HttpSession session=request.getSession();
         User loginUser= (User) session.getAttribute("loginUser");
         Enterprise enterprise= (Enterprise) session.getAttribute("enterprise");
-        if(enterprise==null||!(loginUser!=null&&loginUser.getLevel()==User.MANAGER)){
+        if(CommonUtil.isLogin(request, response)){
+            return;
+        }
+        if(loginUser.getLevel()!=User.MANAGER){
+            response.sendRedirect(request.getContextPath() + "/main.jsp");
+            return;
+        }
+        if(enterprise==null){
             response.sendRedirect(request.getContextPath() + "/main.jsp");
             return;
         }
@@ -106,8 +119,8 @@ public class EnterpriseServlet extends BaseServlet {
         List<Demand>demands= (List<Demand>) session.getAttribute("demands");
         List<Integer> conditionOfCertificationOfDemand=new ArrayList<>();
         if(demands!=null) {
-            for (int i = 0; i < demands.size(); i++) {
-                conditionOfCertificationOfDemand.add(Integer.valueOf(request.getParameter("conditionOfCertification" + demands.get(i).getDemandId())));
+            for (Demand demand : demands) {
+                conditionOfCertificationOfDemand.add(Integer.valueOf(request.getParameter("conditionOfCertification" + demand.getDemandId())));
             }
         }
         if(enterpriseService.changeEnterpriseCertification(enterprise,conditionsOfCertification)) {

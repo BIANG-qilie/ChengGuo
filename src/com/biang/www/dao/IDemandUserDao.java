@@ -9,13 +9,13 @@ public interface IDemandUserDao {
 
     boolean insert(int userId, String demandId) throws Exception;
 
-    boolean queryByDemandIdAndUserId(int userId, String demandId) throws Exception;
+    Object[] queryByDemandIdAndUserId(int userId, int demandId) throws Exception;
 
-    List<Demand> queryByUserId(int userId) throws Exception;
+    List<Demand> queryDemandByUserId(int userId) throws Exception;
 
-    List<Object[]> queryDemandIdAndConditionOfApplyByUserId(int userId) throws Exception;
+    List<Object[]> queryByUserId(int userId) throws Exception;
 
-    List<Object[]> queryDemandIdAndConditionOfApplyByDemandId(int demandId) throws SQLException;
+    List<Object[]> queryByDemandId(int demandId) throws SQLException;
 
     boolean updateConditionOfApplyByUserIdAndDemandId(int userId, int demandId, int conditionOfApply) throws SQLException;
 }

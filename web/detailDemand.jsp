@@ -11,7 +11,7 @@
   Time: 16:00
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"  %>
 <html>
 <head>
     <%
@@ -31,7 +31,7 @@
     <title><%=demand.getTitle()%>-详情</title>
     <script type="text/javascript" src="js/returnTo.js"></script>
     <script type="text/javascript">
-        var isApplied=<%=demandUserService.isApplied(String.valueOf(loginUser.getUserId()), String.valueOf(demand.getDemandId()))%>;
+        var isApplied=<%=(demandUserService.isApplied(demand.getDemandId(),loginUser.getUserId()))%>;
         function checkIsMyEnterprise() {
             if(<%=(loginUser.getUserId()==enterprise.getUserId())%>){
                 alert("不能报名自己发布的需求");
@@ -100,7 +100,7 @@
                                             //别人的企业
                                             out.write("                                <li>\n" +
                                                     "                                    <label >是否已报名</label>\n" +
-                                                    "                                    <span class=\"lab_l\">" +((demandUserService.isApplied(String.valueOf(loginUser.getUserId()), String.valueOf(demand.getDemandId())))?"是":"否")+"</span>\n" +
+                                                    "                                    <span class=\"lab_l\">" +((demandUserService.isApplied(demand.getDemandId(),loginUser.getUserId()))?"是":"否")+"</span>\n" +
                                                     "                                </li>\n");
                                         }
 

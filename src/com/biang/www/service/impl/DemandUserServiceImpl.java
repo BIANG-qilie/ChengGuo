@@ -17,23 +17,24 @@ public class DemandUserServiceImpl implements IDemandUserService {
     }
 
     @Override
-    public boolean isApplied(String loginUserId, String demandId) throws Exception {
-        return demandUserDao.queryByDemandIdAndUserId(Integer.parseInt(loginUserId),demandId);
+    public boolean isApplied(int demandId, int userId) throws Exception {
+        Object[] demandCondition=demandUserDao.queryByDemandIdAndUserId(demandId, userId);
+        return (demandCondition!=null&&demandCondition.length!=0) ;
     }
 
     @Override
     public List<Demand> getDemandByUser(User user) throws Exception {
-        return demandUserDao.queryByUserId(user.getUserId());
+        return demandUserDao.queryDemandByUserId(user.getUserId());
     }
 
     @Override
     public List<Object[]> getConditionOfApplyByUser(User user) throws Exception {
-        return demandUserDao.queryDemandIdAndConditionOfApplyByUserId(user.getUserId());
+        return demandUserDao.queryByUserId(user.getUserId());
     }
 
     @Override
     public List<Object[]> getConditionOfApplyByDemand(Demand demand) throws Exception {
-        return demandUserDao.queryDemandIdAndConditionOfApplyByDemandId(demand.getDemandId());
+        return demandUserDao.queryByDemandId(demand.getDemandId());
     }
 
     @Override

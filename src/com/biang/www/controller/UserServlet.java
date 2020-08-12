@@ -202,18 +202,17 @@ public class UserServlet extends BaseServlet {
             throws Exception{
         HttpSession session=request.getSession();
         User loginUser=(User)session.getAttribute("loginUser");
-        if(loginUser==null){
-            response.sendRedirect(request.getContextPath() + "/index.jsp");
+        if(CommonUtil.isLogin(request, response)){
             return;
         }
         List<Demand> allDemands=demandUserService.getDemandByUser(loginUser);
         List<Object[]> conditionsOfApply=demandUserService.getConditionOfApplyByUser(loginUser);
         if(allDemands!=null) {
-            for (int i = 0; i < allDemands.size(); i++) {
-                int demandId = allDemands.get(i).getDemandId();
-                for (int j = 0; j < conditionsOfApply.size(); j++) {
-                    if (demandId == (int) conditionsOfApply.get(j)[0]) {
-                        allDemands.get(i).setConditionOfApply((int) conditionsOfApply.get(j)[2]);
+            for (Demand allDemand : allDemands) {
+                int demandId = allDemand.getDemandId();
+                for (Object[] objects : conditionsOfApply) {
+                    if (demandId == (int) objects[0]) {
+                        allDemand.setConditionOfApply((int) objects[2]);
                         break;
                     }
                 }
@@ -239,19 +238,23 @@ public class UserServlet extends BaseServlet {
             throws Exception {
         String password=request.getParameter("password");
         HttpSession session=request.getSession();
-        String userName=((User)session.getAttribute("loginUser")).getUserName();
+        User loginUser=(User)session.getAttribute("loginUser");
+        if(CommonUtil.isLogin(request, response)){
+            return;
+        }
+        String userName=loginUser.getUserName();
         User user=new User();
         user.setUserName(userName);
         user.setPassword(password);
-        User loginUser=userService.login(user);
-        if(loginUser==null){
+        User newVersionLoginUser=userService.login(user);
+        if(newVersionLoginUser==null){
             //密码错误
             response.addCookie(new Cookie("errorPassword", password));
             response.sendRedirect(request.getContextPath() + "/checkPassword.jsp");
         }else{
             //密码正确
-            session.setAttribute("changePasswordUser", loginUser);
-            response.addCookie(new Cookie("changePasswordUserName", loginUser.getUserName()));
+            session.setAttribute("changePasswordUser", newVersionLoginUser);
+            response.addCookie(new Cookie("changePasswordUserName", newVersionLoginUser.getUserName()));
             response.sendRedirect(request.getContextPath() + "/changePassword.jsp");
         }
     }
@@ -266,6 +269,9 @@ public class UserServlet extends BaseServlet {
         enterprise.setContactPerson(contactPerson);
         HttpSession session=request.getSession();
         User loginUser=(User)session.getAttribute("loginUser");
+        if(CommonUtil.isLogin(request, response)){
+            return;
+        }
         enterprise.setUserId(loginUser.getUserId());
         if(enterpriseService.addEnterprise(enterprise)){
             //认证成功

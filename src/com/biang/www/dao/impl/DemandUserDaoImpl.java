@@ -15,13 +15,13 @@ import java.util.List;
 public class DemandUserDaoImpl implements IDemandUserDao {
     @Override
     public boolean insert(int userId, String demandId) throws SQLException {
-        System.out.println("insert("+userId+","+demandId+")");
+        System.out.println("insert("+demandId+","+userId+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
             QueryRunner queryRunner = new QueryRunner(dataSource);
             String sql="INSERT INTO demand_user VALUES(?,?,default)";
-            return queryRunner.update(sql, userId, demandId) > 0;
+            return queryRunner.update(sql, demandId, userId) > 0;
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
@@ -34,14 +34,14 @@ public class DemandUserDaoImpl implements IDemandUserDao {
     }
 
     @Override
-    public boolean queryByDemandIdAndUserId(int userId, String demandId) throws SQLException {
-        System.out.println("queryByDemandIdAndUserId("+userId+","+demandId+")");
+    public Object[] queryByDemandIdAndUserId(int demandId, int userId) throws Exception {
+        System.out.println("queryByDemandIdAndUserId("+demandId+","+userId+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
             QueryRunner queryRunner = new QueryRunner(dataSource);
-            String sql="SELECT * from demand_user where userId=? AND demandId=?";
-            return (queryRunner.query(sql,new ArrayHandler(),userId,demandId).length!=0);
+            String sql="SELECT * from demand_user where demandId=? AND userId=?  ";
+            return queryRunner.query(sql,new ArrayHandler(),demandId,userId);
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
@@ -50,17 +50,18 @@ public class DemandUserDaoImpl implements IDemandUserDao {
                 System.out.println("clone()");
             }
         }
-        return false;
+        return null;
     }
 
+
     @Override
-    public List<Demand> queryByUserId(int userId) throws SQLException {
+    public List<Demand> queryDemandByUserId(int userId) throws SQLException {
         System.out.println("queryByUserId("+userId+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
             QueryRunner queryRunner = new QueryRunner(dataSource);
-            String sql="SELECT * FROM demand WHERE demandId=(SELECT demandId from demand_user where userId=? )";
+            String sql="SELECT * FROM demand WHERE demandId=any(SELECT demandId from demand_user where userId=? )";
             return queryRunner.query(sql,new BeanListHandler<>(Demand.class),userId);
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,7 +75,7 @@ public class DemandUserDaoImpl implements IDemandUserDao {
     }
 
     @Override
-    public List<Object[]> queryDemandIdAndConditionOfApplyByUserId(int userId) throws SQLException {
+    public List<Object[]> queryByUserId(int userId) throws SQLException {
         System.out.println("queryConditionOfApplyByUserByUserId("+userId+")");
         DataSource dataSource = null;
         try {
@@ -94,7 +95,7 @@ public class DemandUserDaoImpl implements IDemandUserDao {
     }
 
     @Override
-    public List<Object[]> queryDemandIdAndConditionOfApplyByDemandId(int demandId) throws SQLException {
+    public List<Object[]> queryByDemandId(int demandId) throws SQLException {
         System.out.println("queryDemandIdAndConditionOfApplyByDemandId("+demandId+")");
         DataSource dataSource = null;
         try {

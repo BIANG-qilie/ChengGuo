@@ -9,6 +9,7 @@ import com.biang.www.service.IEnterpriseService;
 import com.biang.www.service.impl.DemandServiceImpl;
 import com.biang.www.service.impl.DemandUserServiceImpl;
 import com.biang.www.service.impl.EnterpriseServiceImpl;
+import com.biang.www.util.CommonUtil;
 import com.biang.www.util.EmailSender;
 
 import javax.servlet.annotation.WebServlet;
@@ -60,6 +61,9 @@ public class DemandServlet extends BaseServlet {
     public void detailDemand(HttpServletRequest request, HttpServletResponse response)
             throws Exception{
         HttpSession session=request.getSession();
+        if(CommonUtil.isLogin(request, response)){
+            return;
+        }
         int demandId=Integer.parseInt(request.getParameter("demandId"));
         Demand demand=demandService.getDemandByDemandId(demandId);
         Enterprise enterprise=enterpriseService.getEnterpriseByEnterpriseId(demand.getEnterpriseId());
@@ -86,8 +90,11 @@ public class DemandServlet extends BaseServlet {
         }
         HttpSession session=request.getSession();
         User loginUser= (User) session.getAttribute("loginUser");
+        if(CommonUtil.isLogin(request, response)){
+            return;
+        }
         List<Demand> allDemands=new ArrayList<>() ;
-        switch ((loginUser==null)?-10086:loginUser.getLevel()) {
+        switch (loginUser.getLevel()) {
             case User.MANAGER:
                 //看得到所有需求
                 allDemands.addAll(demandService.queryFromAllDemand(queryContent));
@@ -101,7 +108,6 @@ public class DemandServlet extends BaseServlet {
                 allDemands.addAll(demandService.queryFromPassCertificationDemand(queryContent));
                 break;
             default:
-                request.getRequestDispatcher("index.jsp").forward(request, response);
                 break;
         }
         int pageNumber=Integer.parseInt ((session.getAttribute("pageNumber")!=null)?((String)session.getAttribute("pageNumber")):"1");
@@ -124,7 +130,15 @@ public class DemandServlet extends BaseServlet {
         String timeRequirement=request.getParameter("timeRequirement");
         HttpSession session=request.getSession();
         session.removeAttribute("pageNumber");
+        User loginUser= (User) session.getAttribute("loginUser");
+        if(CommonUtil.isLogin(request, response)){
+            return;
+        }
         Enterprise enterprise= (Enterprise) session.getAttribute("enterprise");
+        if(enterprise.getUserId()!=loginUser.getUserId()){
+            response.sendRedirect(request.getContextPath()+"/main.jsp");
+            return;
+        }
         Demand demand=new Demand();
         demand.setTitle(title);
         demand.setIntroduction(introduction);
@@ -133,6 +147,7 @@ public class DemandServlet extends BaseServlet {
         demand.setBudget(budget);
         demand.setTimeRequirement(timeRequirement);
         demand.setEnterpriseId(enterprise.getEnterpriseId());
+
         if(demandService.addDemand(demand)){
             //发布成功
             response.sendRedirect(request.getContextPath() + "/enterprise?method=detailEnterprise");
@@ -147,13 +162,14 @@ public class DemandServlet extends BaseServlet {
         int conditionOfDemand= Integer.parseInt(request.getParameter("conditionOfDemand"));
         int demandId=Integer.parseInt(request.getParameter("demandId"));
         HttpSession session=request.getSession();
-        Enterprise enterprise= (Enterprise) session.getAttribute("enterprise");
-        User loginUser=(User)session.getAttribute("loginUser");
-        if(loginUser==null){
-            response.sendRedirect(request.getContextPath() + "/index.jsp");
+        User loginUser= (User) session.getAttribute("loginUser");
+        if(CommonUtil.isLogin(request, response)){
+            return;
         }
+        Enterprise enterprise= (Enterprise) session.getAttribute("enterprise");
         if(enterprise.getUserId()!=loginUser.getUserId()){
             response.sendRedirect(request.getContextPath() + "/main.jsp");
+            return;
         }
         if(demandService.changeDemandConditionOfDemand(demandId,conditionOfDemand)){
             //改变需求状态成功
@@ -168,13 +184,14 @@ public class DemandServlet extends BaseServlet {
             throws Exception{
         HttpSession session=request.getSession();
         Demand demand= (Demand) session.getAttribute("demand");
-        Enterprise enterprise= (Enterprise) session.getAttribute("enterprise");
         User loginUser=(User)session.getAttribute("loginUser");
-        if(loginUser==null){
-            response.sendRedirect(request.getContextPath() + "/index.jsp");
+        if(CommonUtil.isLogin(request, response)){
+            return;
         }
+        Enterprise enterprise= (Enterprise) session.getAttribute("enterprise");
         if(enterprise.getUserId()!=loginUser.getUserId()){
             response.sendRedirect(request.getContextPath() + "/main.jsp");
+            return;
         }
         List<Object[]> allConditionsOfApply= demandUserService.getConditionOfApplyByDemand(demand);
         int pageNumberInCertifyDemand;
@@ -185,10 +202,8 @@ public class DemandServlet extends BaseServlet {
         }
         List<Object[]> conditionsOfApply=new ArrayList<>() ;
         if(allConditionsOfApply!=null) {
-            if (allConditionsOfApply != null) {
-                for (int i = DemandServlet.MAX_NUMBER_OF_MESSAGES * (pageNumberInCertifyDemand - 1); i < Integer.min(DemandServlet.MAX_NUMBER_OF_MESSAGES * pageNumberInCertifyDemand, allConditionsOfApply.size()); i++) {
-                    conditionsOfApply.add(allConditionsOfApply.get(i));
-                }
+            for (int i = DemandServlet.MAX_NUMBER_OF_MESSAGES * (pageNumberInCertifyDemand - 1); i < Integer.min(DemandServlet.MAX_NUMBER_OF_MESSAGES * pageNumberInCertifyDemand, allConditionsOfApply.size()); i++) {
+                conditionsOfApply.add(allConditionsOfApply.get(i));
             }
         }
         session.setAttribute("conditionsOfApply", conditionsOfApply);
