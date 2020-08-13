@@ -172,4 +172,24 @@ public class UserDaoImpl implements IUserDao {
         }
         return false;
     }
+
+    @Override
+    public boolean updateHeadImage(User user, String fileName) throws SQLException {
+        System.out.println("updateHeadImage("+user.getHeadImage()+","+fileName+")");
+        DataSource dataSource = null;
+        try {
+            dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
+            QueryRunner queryRunner = new QueryRunner(dataSource);
+            String sql="UPDATE user SET headImage = ? WHERE userId=?";
+            return queryRunner.update(sql, fileName,user.getUserId())>0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if(dataSource!=null){
+                dataSource.getConnection().close();
+                System.out.println("clone()");
+            }
+        }
+        return false;
+    }
 }

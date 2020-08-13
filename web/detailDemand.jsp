@@ -4,7 +4,8 @@
 <%@ page import="com.biang.www.dao.IDemandUserDao" %>
 <%@ page import="com.biang.www.service.IDemandUserService" %>
 <%@ page import="com.biang.www.service.impl.DemandUserServiceImpl" %>
-<%@ page import="com.biang.www.util.Certification" %><%--
+<%@ page import="com.biang.www.util.Certification" %>
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: dell
   Date: 2020/8/8
@@ -19,6 +20,8 @@
         Demand demand= (Demand) session.getAttribute("demand");
         Enterprise enterprise= (Enterprise) session.getAttribute("enterprise");
         User loginUser=(User)session.getAttribute("loginUser");
+        List<Object[]> annexes= (List<Object[]>) session.getAttribute("annexes");
+        System.out.println(annexes.size());
         if(loginUser == null){
             response.sendRedirect(request.getContextPath() + "/index.jsp");
             return;
@@ -121,6 +124,14 @@
                                     <div>企业名称：<%=enterprise.getEnterpriseName()%>&nbsp;</div>
                                     <div>企业联系人：<%=enterprise.getContactPerson()%>&nbsp;</div>
                                     <div>企业信息：<%=enterprise.getInformation()%></div><br/>
+                                    <%
+                                        if(annexes.size()>0){
+                                            out.write("<div>附件：</div>\n");
+                                            for (int i=0;i<annexes.size();i++){
+                                                out.write("                                    <div><a href=\"downloadAnnexes?filename="+demand.getDemandId()+" "+annexes.get(i)[1]+"\">"+annexes.get(i)[1]+"</a></div>\n");
+                                            }
+                                        }
+                                    %>
                                 </div>
                             </div>
                         </div>

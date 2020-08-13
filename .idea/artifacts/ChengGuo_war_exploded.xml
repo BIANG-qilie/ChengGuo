@@ -2,7 +2,6 @@
   <artifact type="exploded-war" name="ChengGuo:war exploded">
     <output-path>$PROJECT_DIR$/out/artifacts/ChengGuo_war_exploded</output-path>
     <root id="root">
-      <element id="javaee-facet-resources" facet="ChengGuo/web/Web" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="ChengGuo" />
@@ -16,8 +15,11 @@
           <element id="library" level="project" name="jstl-1.2" />
           <element id="library" level="project" name="activation-1.1.1" />
           <element id="library" level="project" name="mail" />
+          <element id="library" level="project" name="commons-fileupload-1.4" />
+          <element id="library" level="project" name="commons-io-2.7" />
         </element>
       </element>
+      <element id="javaee-facet-resources" facet="ChengGuo/web/Web" />
     </root>
   </artifact>
 </component>

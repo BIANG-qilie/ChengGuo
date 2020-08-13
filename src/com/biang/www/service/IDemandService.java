@@ -5,7 +5,6 @@ import com.biang.www.po.Enterprise;
 import com.biang.www.po.User;
 
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 
 public interface IDemandService {
@@ -25,7 +24,7 @@ public interface IDemandService {
 
     List<Demand> getDemandByEnterprise(Enterprise enterprise) throws Exception;
 
-    boolean addDemand(Demand demand) throws Exception;
+    Demand addDemand(Demand demand) throws Exception;
 
     List<Demand> getNotYetPassedDemandByEnterprise(Enterprise enterprise) throws Exception;
 

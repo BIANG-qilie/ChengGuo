@@ -21,4 +21,6 @@ public interface IUserService {
     User getUserByUserId(int loginUserId) throws Exception;
 
     boolean upgrade(User user) throws Exception;
+
+    boolean changeHeadImage(User user, String fileName) throws Exception;
 }

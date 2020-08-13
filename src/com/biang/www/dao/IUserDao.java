@@ -2,6 +2,8 @@ package com.biang.www.dao;
 
 import com.biang.www.po.User;
 
+import java.sql.SQLException;
+
 /**
  * @author BIANG
  */
@@ -18,4 +20,6 @@ public interface IUserDao {
     User queryByUserId(int loginUserId) throws Exception;
 
     boolean updateLevel(User user, int level) throws Exception;
+
+    boolean updateHeadImage(User user, String headImage) throws SQLException;
 }

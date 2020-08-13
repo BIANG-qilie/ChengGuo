@@ -11,14 +11,21 @@ import com.biang.www.service.impl.EnterpriseServiceImpl;
 import com.biang.www.service.impl.UserServiceImpl;
 import com.biang.www.util.CommonUtil;
 import com.biang.www.util.EmailSender;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadBase;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -291,4 +298,5 @@ public class UserServlet extends BaseServlet {
             emailSender.errorReport("企业认证失败", enterprise);
         }
     }
+
 }

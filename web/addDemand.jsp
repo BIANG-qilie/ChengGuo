@@ -5,7 +5,7 @@
   Time: 13:32
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <html>
 <head>
     <title>发布需求</title>
@@ -41,6 +41,15 @@
         <tr>
             <th colspan="2"> 时间需求:</th>
             <th colspan="3"><input type="text" required name="timeRequirement" value=""/> </th>
+        </tr>
+        <tr>
+            <th colspan="2"> 附件:</th>
+            <th>
+                <select name="isHaveAnnex">
+                    <option value="true">有</option>
+                    <option value="false">无</option>
+                </select>
+            </th>
         </tr>
         <tr>
             <th colspan="2"> 详细资料:</th>

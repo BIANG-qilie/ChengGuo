@@ -2,9 +2,9 @@ package com.biang.www.dao.impl;
 
 import com.biang.www.dao.IDemandDao;
 import com.biang.www.po.Demand;
-import com.biang.www.po.User;
 import com.biang.www.util.JDBCUtils;
 import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
@@ -201,14 +201,16 @@ public class DemandDaompl implements IDemandDao {
     }
 
     @Override
-    public boolean insert(Demand demand) throws SQLException {
+    public Demand insert(Demand demand) throws SQLException {
         System.out.println("insert("+demand.getTitle()+""+demand.getIntroduction()+""+demand.getSpecificContent()+""+demand.getDemandUnits()+""+demand.getBudget()+""+demand.getTimeRequirement()+""+demand.getEnterpriseId()+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
             QueryRunner queryRunner = new QueryRunner(dataSource);
             String sql="INSERT INTO demand VALUES(default,?,?,?,?,?,?,?,default,default)";
-            return queryRunner.update(sql,demand.getTitle(),demand.getIntroduction(),demand.getSpecificContent(),demand.getDemandUnits(),demand.getBudget(),demand.getTimeRequirement(),demand.getEnterpriseId()) > 0;
+            queryRunner.update(sql,demand.getTitle(),demand.getIntroduction(),demand.getSpecificContent(),demand.getDemandUnits(),demand.getBudget(),demand.getTimeRequirement(),demand.getEnterpriseId());
+            sql="SELECT LAST_INSERT_ID()";
+            return queryByDemandid(Integer.parseInt(String.valueOf(queryRunner.query(sql,new ArrayHandler())[0])));
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
@@ -217,7 +219,7 @@ public class DemandDaompl implements IDemandDao {
                 System.out.println("clone()");
             }
         }
-        return false;
+        return null;
     }
 
     @Override

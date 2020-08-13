@@ -57,7 +57,7 @@ public class DemandServiceImpl implements IDemandService {
     }
 
     @Override
-    public boolean addDemand(Demand demand) throws Exception {
+    public Demand addDemand(Demand demand) throws Exception {
         return demandDao.insert(demand);
     }
 

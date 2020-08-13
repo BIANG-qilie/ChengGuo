@@ -58,19 +58,21 @@ public class User {
 
     public User(){}
 
-    public User(int userId, String userName, String password, String email, int level) {
-        this.userId = userId;
-        this.userName = userName;
-        this.password = password;
-        this.email = email;
-        this.level = level;
-    }
-
     private int userId;
     private String userName;
     private String password;
     private String email;
     private int level;
+
+    public String getHeadImage() {
+        return headImage;
+    }
+
+    public void setHeadImage(String headImage) {
+        this.headImage = headImage;
+    }
+
+    private String headImage;
     @Override
     public String toString(){
         return "用户ID:"+userId+" \n"+

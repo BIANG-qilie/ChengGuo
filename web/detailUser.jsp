@@ -62,7 +62,7 @@
                             <li>
                                 <label >级别</label>
                                 <span class="lab_l">
-                                    <i>
+                                    <a href="headUpload.jsp"><i>
                                         <%
                                             switch (loginUser.getLevel()){
                                                 case User.COMMON_USER:
@@ -79,7 +79,7 @@
                                                     break;
                                             }
                                         %>
-                                    </i>
+                                    </i></a>
                                     <%=((loginUser.getLevel()==User.COMMON_USER)?"<a href=\"upgrade.jsp\">升级用户</a>":"")%>
                                 </span> </li>
                             <li>

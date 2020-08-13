@@ -25,7 +25,7 @@ public interface IDemandDao {
 
     List<Demand> queryByEnterpriseIdOrConditionOfCertification(int enterpriseId, int conditionOfCertification) throws Exception;
 
-    boolean insert(Demand demand) throws Exception;
+    Demand insert(Demand demand) throws Exception;
 
     List<Demand> queryByEnterpriseIdAndConditionOfCertification(int enterpriseId, int conditionOfCertification) throws Exception;
 

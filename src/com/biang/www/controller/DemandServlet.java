@@ -3,9 +3,11 @@ package com.biang.www.controller;
 import com.biang.www.po.Demand;
 import com.biang.www.po.Enterprise;
 import com.biang.www.po.User;
+import com.biang.www.service.IAnnexService;
 import com.biang.www.service.IDemandService;
 import com.biang.www.service.IDemandUserService;
 import com.biang.www.service.IEnterpriseService;
+import com.biang.www.service.impl.AnnexServiceImpl;
 import com.biang.www.service.impl.DemandServiceImpl;
 import com.biang.www.service.impl.DemandUserServiceImpl;
 import com.biang.www.service.impl.EnterpriseServiceImpl;
@@ -26,6 +28,7 @@ public class DemandServlet extends BaseServlet {
     IDemandService demandService=new DemandServiceImpl();
     IDemandUserService demandUserService=new DemandUserServiceImpl();
     IEnterpriseService enterpriseService=new EnterpriseServiceImpl();
+    IAnnexService annexService=new AnnexServiceImpl();
     public static final int MAX_NUMBER_OF_MESSAGES=5;
     public void reloadDemand(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
@@ -67,6 +70,8 @@ public class DemandServlet extends BaseServlet {
         int demandId=Integer.parseInt(request.getParameter("demandId"));
         Demand demand=demandService.getDemandByDemandId(demandId);
         Enterprise enterprise=enterpriseService.getEnterpriseByEnterpriseId(demand.getEnterpriseId());
+        List<Object[]> annexes=annexService.getAnnexesByDemandId(demand.getDemandId());
+        session.setAttribute("annexes",annexes);
         session.setAttribute("demand",demand);
         session.setAttribute("enterprise",enterprise);
         request.getRequestDispatcher("detailDemand.jsp").forward(request, response);
@@ -128,6 +133,7 @@ public class DemandServlet extends BaseServlet {
         String demandUnits=request.getParameter("demandUnits");
         String budget=request.getParameter("budget");
         String timeRequirement=request.getParameter("timeRequirement");
+        boolean isHaveAnnex= Boolean.parseBoolean(request.getParameter("isHaveAnnex"));
         HttpSession session=request.getSession();
         session.removeAttribute("pageNumber");
         User loginUser= (User) session.getAttribute("loginUser");
@@ -147,10 +153,15 @@ public class DemandServlet extends BaseServlet {
         demand.setBudget(budget);
         demand.setTimeRequirement(timeRequirement);
         demand.setEnterpriseId(enterprise.getEnterpriseId());
-
-        if(demandService.addDemand(demand)){
+        Demand insertDemand=null;
+        if((insertDemand=demandService.addDemand(demand))!=null){
             //发布成功
-            response.sendRedirect(request.getContextPath() + "/enterprise?method=detailEnterprise");
+            if(isHaveAnnex){
+                session.setAttribute("newDemand", insertDemand);
+                response.sendRedirect(request.getContextPath() + "/uploadAnnex.jsp");
+            }else {
+                response.sendRedirect(request.getContextPath() + "/enterprise?method=detailEnterprise");
+            }
         }else{
             //发布失败
             EmailSender emailSender=new EmailSender();

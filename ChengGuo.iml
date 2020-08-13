@@ -32,5 +32,7 @@
     <orderEntry type="library" exported="" name="jstl-1.2" level="project" />
     <orderEntry type="library" exported="" name="activation-1.1.1" level="project" />
     <orderEntry type="library" exported="" name="mail" level="project" />
+    <orderEntry type="library" name="commons-fileupload-1.4" level="project" />
+    <orderEntry type="library" name="commons-io-2.7" level="project" />
   </component>
 </module>

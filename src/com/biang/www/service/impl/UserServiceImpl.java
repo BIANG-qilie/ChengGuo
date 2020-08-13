@@ -49,5 +49,10 @@ public class UserServiceImpl implements IUserService {
     public boolean upgrade(User user) throws Exception {
         return userDao.updateLevel(user,User.ENTERPRISE_USER);
     }
+
+    @Override
+    public boolean changeHeadImage(User user, String fileName) throws Exception {
+        return userDao.updateHeadImage(user, fileName);
+    }
 }
 
