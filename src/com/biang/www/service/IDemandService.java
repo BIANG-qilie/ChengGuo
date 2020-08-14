@@ -8,19 +8,19 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface IDemandService {
-    List<Demand> getAllDemand() throws Exception;
+    List<Demand> getPagingDemandFromAllDemand(int pageNumber) throws Exception;
 
-    List<Demand> getDemandByEnterpriseUser(User loginUser) throws Exception;
+    List<Demand> getPagingDemandByEnterpriseUser(User loginUser, int pageNumber) throws Exception;
 
-    List<Demand> getPassCertificationDemand() throws Exception;
+    List<Demand> getPassCertificationDemand(int pageNumber) throws Exception;
 
     Demand getDemandByDemandId(int demandId) throws Exception;
 
-    List<Demand> queryFromAllDemand(String queryContent) throws Exception;
+    List<Demand> queryFromAllDemand(String queryContent, int pageNumber) throws Exception;
 
-    List<Demand> queryFromEnterpriseUser(User loginUser,String queryContent) throws Exception;
+    List<Demand> queryFromEnterpriseUser(User loginUser, String queryContent, int pageNumber) throws Exception;
 
-    List<Demand> queryFromPassCertificationDemand(String queryContent) throws Exception;
+    List<Demand> queryFromPassCertificationDemand(String queryContent, int pageNumber) throws Exception;
 
     List<Demand> getDemandByEnterprise(Enterprise enterprise) throws Exception;
 
@@ -31,4 +31,6 @@ public interface IDemandService {
     boolean changeDemandCertification(Demand demand, int conditionOfCertification) throws Exception;
 
     boolean changeDemandConditionOfDemand(int demandId, int conditionOfDemand) throws SQLException;
+
+    int getSizeOfAllDemands() throws SQLException;
 }

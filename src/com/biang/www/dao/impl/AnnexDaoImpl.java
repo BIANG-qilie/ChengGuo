@@ -3,6 +3,7 @@ package com.biang.www.dao.impl;
 import com.biang.www.dao.IAnnexDao;
 import com.biang.www.po.User;
 import com.biang.www.util.JDBCUtils;
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
@@ -11,10 +12,12 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * @author BIANG
+ */
 public class AnnexDaoImpl implements IAnnexDao {
     @Override
     public boolean insert(int demandId, String annexName) throws SQLException {
-        System.out.println("insert("+demandId+","+annexName+")");
         DataSource dataSource = null;
         try {
             dataSource= JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -25,8 +28,7 @@ public class AnnexDaoImpl implements IAnnexDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return false;
@@ -34,7 +36,6 @@ public class AnnexDaoImpl implements IAnnexDao {
 
     @Override
     public List<Object[]> queryByDemandId(int demandId) throws SQLException {
-        System.out.println("queryByDemandId("+demandId+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -45,8 +46,7 @@ public class AnnexDaoImpl implements IAnnexDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;

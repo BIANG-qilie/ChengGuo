@@ -3,6 +3,7 @@ package com.biang.www.dao.impl;
 import com.biang.www.dao.IDemandUserDao;
 import com.biang.www.po.Demand;
 import com.biang.www.util.JDBCUtils;
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.apache.commons.dbutils.handlers.ArrayListHandler;
@@ -15,7 +16,6 @@ import java.util.List;
 public class DemandUserDaoImpl implements IDemandUserDao {
     @Override
     public boolean insert(int userId, String demandId) throws SQLException {
-        System.out.println("insert("+demandId+","+userId+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -26,8 +26,7 @@ public class DemandUserDaoImpl implements IDemandUserDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return false;
@@ -35,7 +34,6 @@ public class DemandUserDaoImpl implements IDemandUserDao {
 
     @Override
     public Object[] queryByDemandIdAndUserId(int demandId, int userId) throws Exception {
-        System.out.println("queryByDemandIdAndUserId("+demandId+","+userId+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -46,8 +44,7 @@ public class DemandUserDaoImpl implements IDemandUserDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
@@ -56,7 +53,6 @@ public class DemandUserDaoImpl implements IDemandUserDao {
 
     @Override
     public List<Demand> queryDemandByUserId(int userId) throws SQLException {
-        System.out.println("queryByUserId("+userId+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -67,8 +63,7 @@ public class DemandUserDaoImpl implements IDemandUserDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
@@ -76,7 +71,6 @@ public class DemandUserDaoImpl implements IDemandUserDao {
 
     @Override
     public List<Object[]> queryByUserId(int userId) throws SQLException {
-        System.out.println("queryConditionOfApplyByUserByUserId("+userId+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -87,8 +81,7 @@ public class DemandUserDaoImpl implements IDemandUserDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
@@ -96,7 +89,6 @@ public class DemandUserDaoImpl implements IDemandUserDao {
 
     @Override
     public List<Object[]> queryByDemandId(int demandId) throws SQLException {
-        System.out.println("queryDemandIdAndConditionOfApplyByDemandId("+demandId+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -107,8 +99,7 @@ public class DemandUserDaoImpl implements IDemandUserDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
@@ -116,7 +107,6 @@ public class DemandUserDaoImpl implements IDemandUserDao {
 
     @Override
     public boolean updateConditionOfApplyByUserIdAndDemandId(int userId, int demandId, int conditionOfApply) throws SQLException {
-        System.out.println("updateConditionOfApplyByUserIdAndDemandId("+userId+","+demandId+","+conditionOfApply+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -127,8 +117,7 @@ public class DemandUserDaoImpl implements IDemandUserDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return false;

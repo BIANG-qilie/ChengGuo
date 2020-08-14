@@ -62,7 +62,7 @@
                             <li>
                                 <label >级别</label>
                                 <span class="lab_l">
-                                    <a href="headUpload.jsp"><i>
+                                    <a href="uploadHeadImage.jsp"><i>
                                         <%
                                             switch (loginUser.getLevel()){
                                                 case User.COMMON_USER:

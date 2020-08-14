@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * @author BIANG
+ */
 @WebServlet("/checkCode")
 public class CheckCodeServlet extends HttpServlet {
     @Override

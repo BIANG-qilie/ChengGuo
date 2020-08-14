@@ -17,38 +17,38 @@ public class DemandServiceImpl implements IDemandService {
     IDemandDao demandDao=new DemandDaompl();
     IEnterpriseDao enterpriseDao=new EnterpriseDaoImpl();
     @Override
-    public List<Demand> getAllDemand() throws Exception {
-        return demandDao.queryAllDemand();
+    public List<Demand> getPagingDemandFromAllDemand(int pageNumber) throws Exception {
+        return demandDao.queryPagingDemandFromAllDemand(pageNumber);
     }
 
     @Override
-    public List<Demand> getDemandByEnterpriseUser(User loginUser) throws Exception {
-        return demandDao.queryByEnterpriseIdOrConditionOfCertification(enterpriseDao.queryByUserId(loginUser.getUserId()).getEnterpriseId(),Certification.PASS_CERTIFICATION);
+    public List<Demand> getPagingDemandByEnterpriseUser(User loginUser, int pageNumber) throws Exception {
+        return demandDao.queryPagingDemandByEnterpriseIdOrConditionOfCertification(enterpriseDao.queryByUserId(loginUser.getUserId()).getEnterpriseId(),Certification.PASS_CERTIFICATION,pageNumber);
     }
 
     @Override
-    public List<Demand> getPassCertificationDemand() throws Exception {
-        return demandDao.queryByConditionsOfCertification(Certification.PASS_CERTIFICATION);
+    public List<Demand> getPassCertificationDemand(int pageNumber) throws Exception {
+        return demandDao.queryPagingDemandByConditionsOfCertification(Certification.PASS_CERTIFICATION,pageNumber);
     }
 
     @Override
     public Demand getDemandByDemandId(int demandId) throws Exception {
-        return demandDao.queryByDemandid(demandId);
+        return demandDao.queryByDemandId(demandId);
     }
 
     @Override
-    public List<Demand> queryFromAllDemand(String queryContent) throws Exception {
-        return demandDao.queryFromAllDemand(queryContent);
+    public List<Demand> queryFromAllDemand(String queryContent, int pageNumber) throws Exception {
+        return demandDao.queryPagingDemandFromAllDemand(queryContent,pageNumber);
     }
 
     @Override
-    public List<Demand> queryFromEnterpriseUser(User loginUser,String queryContent) throws Exception {
-        return demandDao.queryFromEnterpriseId(enterpriseDao.queryByUserId(loginUser.getUserId()).getEnterpriseId(),Certification.PASS_CERTIFICATION,queryContent);
+    public List<Demand> queryFromEnterpriseUser(User loginUser, String queryContent, int pageNumber) throws Exception {
+        return demandDao.queryPagingDemandFromEnterpriseId(enterpriseDao.queryByUserId(loginUser.getUserId()).getEnterpriseId(),Certification.PASS_CERTIFICATION,queryContent,pageNumber);
     }
 
     @Override
-    public List<Demand> queryFromPassCertificationDemand(String queryContent) throws Exception {
-        return demandDao.queryFromPassCertificationDemand(Certification.PASS_CERTIFICATION,queryContent);
+    public List<Demand> queryFromPassCertificationDemand(String queryContent, int pageNumber) throws Exception {
+        return demandDao.queryPagingDemandFromPassCertificationDemand(Certification.PASS_CERTIFICATION,queryContent,pageNumber);
     }
 
     @Override
@@ -74,5 +74,10 @@ public class DemandServiceImpl implements IDemandService {
     @Override
     public boolean changeDemandConditionOfDemand(int demandId, int conditionOfDemand) throws SQLException {
         return demandDao.updateConditionOfDemand(demandId,conditionOfDemand);
+    }
+
+    @Override
+    public int getSizeOfAllDemands() throws SQLException {
+        return Integer.parseInt(String.valueOf(demandDao.querySizeOfAllDemands()[0]));
     }
 }

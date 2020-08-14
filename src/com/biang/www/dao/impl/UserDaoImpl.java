@@ -4,6 +4,7 @@ import com.biang.www.dao.IUserDao;
 import com.biang.www.po.Demand;
 import com.biang.www.po.User;
 import com.biang.www.util.JDBCUtils;
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
@@ -17,7 +18,6 @@ import java.sql.SQLException;
 public class UserDaoImpl implements IUserDao {
     @Override
     public boolean insert(User user) throws SQLException {
-        System.out.println("insert("+user.getUserName()+","+user.getPassword()+","+user.getEmail()+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -28,15 +28,13 @@ public class UserDaoImpl implements IUserDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return false;
     }
     @Override
     public User queryByUserName(String userName) throws SQLException {
-        System.out.println("queryByUserName("+userName+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -47,15 +45,13 @@ public class UserDaoImpl implements IUserDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
     }
     @Override
     public User queryByUserNameAndPassword(User user) throws SQLException {
-        System.out.println("queryByUserNameAndPassword("+user.getUserName()+","+user.getPassword()+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -66,8 +62,7 @@ public class UserDaoImpl implements IUserDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
@@ -75,7 +70,6 @@ public class UserDaoImpl implements IUserDao {
 
     @Override
     public User queryByUserNameAndEmail(User user) throws SQLException {
-        System.out.println("queryByUserNameAndEmail("+user.getUserName()+","+user.getEmail()+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -86,8 +80,7 @@ public class UserDaoImpl implements IUserDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
@@ -95,7 +88,6 @@ public class UserDaoImpl implements IUserDao {
 
     @Override
     public boolean updatePassword(User user, String newPassword) throws SQLException {
-        System.out.println("updatePassword("+newPassword+","+user.getUserId()+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -106,8 +98,7 @@ public class UserDaoImpl implements IUserDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return false;
@@ -115,7 +106,6 @@ public class UserDaoImpl implements IUserDao {
 
     @Override
     public User queryByEmail(String email) throws SQLException {
-        System.out.println("queryByEmail("+email+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -126,8 +116,7 @@ public class UserDaoImpl implements IUserDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
@@ -135,7 +124,6 @@ public class UserDaoImpl implements IUserDao {
 
     @Override
     public User queryByUserId(int loginUserId) throws SQLException {
-        System.out.println("queryByUserId("+loginUserId+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -146,8 +134,7 @@ public class UserDaoImpl implements IUserDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
@@ -155,7 +142,6 @@ public class UserDaoImpl implements IUserDao {
 
     @Override
     public boolean updateLevel(User user, int level) throws SQLException {
-        System.out.println("updateLevel("+level+","+user.getLevel()+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -166,8 +152,7 @@ public class UserDaoImpl implements IUserDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return false;
@@ -175,7 +160,6 @@ public class UserDaoImpl implements IUserDao {
 
     @Override
     public boolean updateHeadImage(User user, String fileName) throws SQLException {
-        System.out.println("updateHeadImage("+user.getHeadImage()+","+fileName+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -186,8 +170,7 @@ public class UserDaoImpl implements IUserDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return false;

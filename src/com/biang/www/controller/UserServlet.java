@@ -298,5 +298,18 @@ public class UserServlet extends BaseServlet {
             emailSender.errorReport("企业认证失败", enterprise);
         }
     }
+    public void logout(HttpServletRequest request, HttpServletResponse response)
+            throws Exception{
+        HttpSession session=request.getSession();
+        session.setMaxInactiveInterval(0);
+        Cookie[] cookies=request.getCookies();
+        for (Cookie value : cookies) {
+            if(value.getName().equals("JSESSIONID")) {
+                value.setMaxAge(0);
+                response.addCookie(value);
+            }
+        }
+        response.sendRedirect(request.getContextPath()+"/main.jsp");
+    }
 
 }

@@ -21,7 +21,7 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 
 /**
- * @author dell
+ * @author BIANG
  */
 @WebServlet("/demand")
 public class DemandServlet extends BaseServlet {
@@ -34,30 +34,25 @@ public class DemandServlet extends BaseServlet {
             throws Exception {
         HttpSession session=request.getSession();
         User loginUser= (User) session.getAttribute("loginUser");
-        List<Demand> allDemands=new ArrayList<>() ;
+        int pageNumber=Integer.parseInt ((session.getAttribute("pageNumber")!=null)?((String)session.getAttribute("pageNumber")):"1");
+        List<Demand> demands=new ArrayList<>() ;
         switch ((loginUser==null)?1:loginUser.getLevel()) {
             case User.MANAGER:
                 //看得到所有需求
-                allDemands.addAll(demandService.getAllDemand());
+                demands.addAll(demandService.getPagingDemandFromAllDemand(pageNumber));
                 break;
             case User.ENTERPRISE_USER:
                 //看得到自己企业未通过以及审核中的需求
-                allDemands.addAll(demandService.getDemandByEnterpriseUser(loginUser));
+                demands.addAll(demandService.getPagingDemandByEnterpriseUser(loginUser,pageNumber));
                 break;
             case User.COMMON_USER:
                 //看得到所有通过的需求
-                allDemands.addAll(demandService.getPassCertificationDemand());
+                demands.addAll(demandService.getPassCertificationDemand(pageNumber));
                 break;
             default:
                 break;
         }
-        int pageNumber=Integer.parseInt ((session.getAttribute("pageNumber")!=null)?((String)session.getAttribute("pageNumber")):"1");
-        List<Demand> demands=new ArrayList<>() ;
-        for(int i = MAX_NUMBER_OF_MESSAGES*(pageNumber-1); i< Integer.min(MAX_NUMBER_OF_MESSAGES*pageNumber,allDemands.size()); i++){
-            demands.add(allDemands.get(i));
-        }
         session.setAttribute("demands",demands);
-        session.setAttribute("sizeOfDemands",allDemands.size());
         session.setAttribute("pageNumber",String.valueOf(pageNumber));
         request.getRequestDispatcher("main.jsp").forward(request, response);
     }
@@ -89,7 +84,7 @@ public class DemandServlet extends BaseServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         String queryContent= request.getParameter("queryContent");
-        if("".equals(queryContent)){
+        if("".equals(queryContent.trim())){
             reloadDemand(request, response);
             return;
         }
@@ -98,30 +93,25 @@ public class DemandServlet extends BaseServlet {
         if(CommonUtil.isLogin(request, response)){
             return;
         }
-        List<Demand> allDemands=new ArrayList<>() ;
+        List<Demand> demands=new ArrayList<>() ;
+        int pageNumber=Integer.parseInt ((session.getAttribute("pageNumber")!=null)?((String)session.getAttribute("pageNumber")):"1");
         switch (loginUser.getLevel()) {
             case User.MANAGER:
                 //看得到所有需求
-                allDemands.addAll(demandService.queryFromAllDemand(queryContent));
+                demands.addAll(demandService.queryFromAllDemand(queryContent,pageNumber));
                 break;
             case User.ENTERPRISE_USER:
                 //看得到自己企业未通过以及审核中的需求
-                allDemands.addAll(demandService.queryFromEnterpriseUser(loginUser,queryContent));
+                demands.addAll(demandService.queryFromEnterpriseUser(loginUser,queryContent,pageNumber));
                 break;
             case User.COMMON_USER:
                 //看得到所有通过的需求
-                allDemands.addAll(demandService.queryFromPassCertificationDemand(queryContent));
+                demands.addAll(demandService.queryFromPassCertificationDemand(queryContent,pageNumber));
                 break;
             default:
                 break;
         }
-        int pageNumber=Integer.parseInt ((session.getAttribute("pageNumber")!=null)?((String)session.getAttribute("pageNumber")):"1");
-        List<Demand> demands=new ArrayList<>() ;
-        for(int i = MAX_NUMBER_OF_MESSAGES*(pageNumber-1); i< Integer.min(MAX_NUMBER_OF_MESSAGES*pageNumber,allDemands.size()); i++){
-            demands.add(allDemands.get(i));
-        }
         session.setAttribute("demands",demands);
-        session.setAttribute("sizeOfDemands",allDemands.size());
         session.setAttribute("pageNumber",String.valueOf(pageNumber));
         request.getRequestDispatcher("main.jsp").forward(request, response);
     }

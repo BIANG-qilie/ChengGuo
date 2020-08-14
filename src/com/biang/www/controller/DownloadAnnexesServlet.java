@@ -9,9 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Servlet implementation class DownloadServlet
- */
+
 @WebServlet("/downloadAnnexes")
 public class DownloadAnnexesServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -21,7 +19,7 @@ public class DownloadAnnexesServlet extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		String fileName = request.getParameter("filename") ;
 		response.addHeader("content-Type","application/octet-stream" );
-		response.addHeader("content-Disposition","attachement;filename="+fileName );
+		response.addHeader("content-Disposition","attachment;filename="+fileName );
 
 		InputStream in = getServletContext().getResourceAsStream("/annexes/"+fileName) ;
 
@@ -33,7 +31,6 @@ public class DownloadAnnexesServlet extends HttpServlet {
 		}
 		out.close();
 		in.close();
-		
 	}
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

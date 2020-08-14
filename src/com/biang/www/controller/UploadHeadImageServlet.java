@@ -19,14 +19,18 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+/**
+ * @author BIANG
+ * 不用 BaseServlet 是因为会提前使用迭代器，使指针指空
+ */
 @WebServlet("/uploadHeadImage")
 
-//不用 BaseServlet 是因为会提前使用迭代器，使指针指空
+
 public class UploadHeadImageServlet extends HttpServlet {
     IUserService userService=new UserServiceImpl();
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws  IOException {
         request.setCharacterEncoding("utf-8");
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html; charset=UTF-8");
@@ -46,7 +50,7 @@ public class UploadHeadImageServlet extends HttpServlet {
                             System.out.println(4);
                             tip="图片类型有误！格式只能是jpg";
                             session.setAttribute("tip", tip);
-                            response.sendRedirect(request.getContextPath()+"/headUpload.jsp");
+                            response.sendRedirect(request.getContextPath()+"/uploadHeadImage.jsp");
                             return ;//终止
                         }
                         String path = "D:\\Gitfile\\ChengGuo\\web\\images";
@@ -68,13 +72,13 @@ public class UploadHeadImageServlet extends HttpServlet {
                             return;
                         }
                         session.setAttribute("tip", tip);
-                        response.sendRedirect(request.getContextPath()+"/headUpload.jsp");
+                        response.sendRedirect(request.getContextPath()+"/uploadHeadImage.jsp");
                         return;
                     }
                 }
                 tip="没有选择文件";
                 session.setAttribute("tip", tip);
-                response.sendRedirect(request.getContextPath()+"/headUpload.jsp");
+                response.sendRedirect(request.getContextPath()+"/uploadHeadImage.jsp");
                 return;
             }else {
                 EmailSender emailSender=new EmailSender();

@@ -1,8 +1,10 @@
 package com.biang.www.dao.impl;
 
+import com.biang.www.controller.DemandServlet;
 import com.biang.www.dao.IDemandDao;
 import com.biang.www.po.Demand;
 import com.biang.www.util.JDBCUtils;
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
@@ -14,26 +16,23 @@ import java.util.List;
 
 public class DemandDaompl implements IDemandDao {
     @Override
-    public List<Demand> queryAllDemand() throws SQLException {
-        System.out.println("queryAllDemand()");
+    public List<Demand> queryPagingDemandFromAllDemand(int pageNumber) throws SQLException {
         DataSource dataSource = null;
         try {
             dataSource = JDBCUtils.getDataSourceWIthDBCPByProperties();
             QueryRunner queryRunner = new QueryRunner(dataSource);
-            String sql = "select * from demand";
-            return queryRunner.query(sql, new BeanListHandler<>(Demand.class));
+            String sql = "select * from demand limit ?,?";
+            return queryRunner.query(sql, new BeanListHandler<>(Demand.class),(pageNumber-1)* DemandServlet.MAX_NUMBER_OF_MESSAGES,DemandServlet.MAX_NUMBER_OF_MESSAGES);
         }catch (Exception e){
             e.printStackTrace();
         }finally {
-            dataSource.getConnection().close();
-            System.out.println("clone()");
+            DbUtils.close(dataSource.getConnection());
         }
         return null;
     }
 
     @Override
     public List<Demand> queryByEnterpriseId(int enterpriseId) throws SQLException {
-        System.out.println("queryByEnterpriseId("+enterpriseId+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -44,36 +43,32 @@ public class DemandDaompl implements IDemandDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
     }
 
     @Override
-    public List<Demand> queryByConditionsOfCertification(int conditionsOfCertification) throws SQLException {
-        System.out.println("queryByConditionsOfCertification("+conditionsOfCertification+")");
+    public List<Demand> queryPagingDemandByConditionsOfCertification(int conditionsOfCertification, int pageNumber) throws SQLException {
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
             QueryRunner queryRunner = new QueryRunner(dataSource);
-            String sql="select * from demand WHERE conditionOfCertification=?";
-            return queryRunner.query(sql,new BeanListHandler<>(Demand.class),conditionsOfCertification);
+            String sql="select * from demand WHERE conditionOfCertification=? limit ?,?";
+            return queryRunner.query(sql,new BeanListHandler<>(Demand.class),conditionsOfCertification,(pageNumber-1)* DemandServlet.MAX_NUMBER_OF_MESSAGES,DemandServlet.MAX_NUMBER_OF_MESSAGES);
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
     }
 
     @Override
-    public Demand queryByDemandid(int demandId) throws SQLException {
-        System.out.println("queryByDemandid("+demandId+")");
+    public Demand queryByDemandId(int demandId) throws SQLException {
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -84,16 +79,14 @@ public class DemandDaompl implements IDemandDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
     }
 
     @Override
-    public List<Demand> queryFromAllDemand(String queryContent) throws SQLException {
-        System.out.println("queryFromAllDemand("+queryContent+")");
+    public List<Demand> queryPagingDemandFromAllDemand(String queryContent, int pageNumber) throws SQLException {
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -108,23 +101,22 @@ public class DemandDaompl implements IDemandDao {
                     "OR timeRequirement REGEXP ? \n" +
                     "OR enterpriseId REGEXP ? \n" +
                     "OR conditionOfCertification REGEXP ? \n" +
-                    "OR conditionOfDemand REGEXP ? ;";
-            return queryRunner.query(sql,new BeanListHandler<>(Demand.class),queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent);
+                    "OR conditionOfDemand REGEXP ? " +
+                    "limit ?,?";
+            return queryRunner.query(sql,new BeanListHandler<>(Demand.class),queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,(pageNumber-1)* DemandServlet.MAX_NUMBER_OF_MESSAGES,DemandServlet.MAX_NUMBER_OF_MESSAGES);
 
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
     }
 
     @Override
-    public List<Demand> queryFromEnterpriseId(int enterpriseId,int conditionOfCertification,String queryContent) throws SQLException {
-        System.out.println("queryFromEnterpriseId("+enterpriseId+","+queryContent+")");
+    public List<Demand> queryPagingDemandFromEnterpriseId(int enterpriseId, int conditionOfCertification, String queryContent, int pageNumber) throws SQLException {
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -137,23 +129,22 @@ public class DemandDaompl implements IDemandDao {
                     "OR demandUnits REGEXP ? \n" +
                     "OR budget REGEXP ? \n" +
                     "OR timeRequirement REGEXP ? \n" +
-                    "OR conditionOfDemand REGEXP ? );";
-            return queryRunner.query(sql,new BeanListHandler<>(Demand.class),enterpriseId,conditionOfCertification,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent);
+                    "OR conditionOfDemand REGEXP ? )" +
+                    "limit ?,?";
+            return queryRunner.query(sql,new BeanListHandler<>(Demand.class),enterpriseId,conditionOfCertification,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,(pageNumber-1)* DemandServlet.MAX_NUMBER_OF_MESSAGES,DemandServlet.MAX_NUMBER_OF_MESSAGES);
 
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
     }
 
     @Override
-    public List<Demand> queryFromPassCertificationDemand(int conditionsOfCertification,String queryContent) throws SQLException {
-        System.out.println("queryFromPassCertificationDemand("+conditionsOfCertification+","+queryContent+")");
+    public List<Demand> queryPagingDemandFromPassCertificationDemand(int conditionsOfCertification, String queryContent, int pageNumber) throws SQLException {
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -167,34 +158,32 @@ public class DemandDaompl implements IDemandDao {
                     "OR budget REGEXP ? \n" +
                     "OR timeRequirement REGEXP ? \n" +
                     "OR enterpriseId REGEXP ? \n" +
-                    "OR conditionOfDemand REGEXP ? );";
-            return queryRunner.query(sql,new BeanListHandler<>(Demand.class),conditionsOfCertification,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent);
+                    "OR conditionOfDemand REGEXP ? )" +
+                    "limit ?,?";
+            return queryRunner.query(sql,new BeanListHandler<>(Demand.class),conditionsOfCertification,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,queryContent,(pageNumber-1)* DemandServlet.MAX_NUMBER_OF_MESSAGES,DemandServlet.MAX_NUMBER_OF_MESSAGES);
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
     }
 
     @Override
-    public List<Demand> queryByEnterpriseIdOrConditionOfCertification(int enterpriseId, int conditionOfCertification) throws SQLException {
-        System.out.println("queryByEnterpriseIdOrConditionOfCertification("+enterpriseId+","+conditionOfCertification+")");
+    public List<Demand> queryPagingDemandByEnterpriseIdOrConditionOfCertification(int enterpriseId, int conditionOfCertification, int pageNumber) throws SQLException {
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
             QueryRunner queryRunner = new QueryRunner(dataSource);
-            String sql="select * from demand WHERE enterpriseId=? OR conditionOfCertification=?";
-            return queryRunner.query(sql,new BeanListHandler<>(Demand.class),enterpriseId,conditionOfCertification);
+            String sql="select * from demand WHERE enterpriseId=? OR conditionOfCertification=? limit ?,?";
+            return queryRunner.query(sql,new BeanListHandler<>(Demand.class),enterpriseId,conditionOfCertification,(pageNumber-1)* DemandServlet.MAX_NUMBER_OF_MESSAGES,DemandServlet.MAX_NUMBER_OF_MESSAGES);
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
@@ -202,7 +191,6 @@ public class DemandDaompl implements IDemandDao {
 
     @Override
     public Demand insert(Demand demand) throws SQLException {
-        System.out.println("insert("+demand.getTitle()+""+demand.getIntroduction()+""+demand.getSpecificContent()+""+demand.getDemandUnits()+""+demand.getBudget()+""+demand.getTimeRequirement()+""+demand.getEnterpriseId()+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -210,13 +198,12 @@ public class DemandDaompl implements IDemandDao {
             String sql="INSERT INTO demand VALUES(default,?,?,?,?,?,?,?,default,default)";
             queryRunner.update(sql,demand.getTitle(),demand.getIntroduction(),demand.getSpecificContent(),demand.getDemandUnits(),demand.getBudget(),demand.getTimeRequirement(),demand.getEnterpriseId());
             sql="SELECT LAST_INSERT_ID()";
-            return queryByDemandid(Integer.parseInt(String.valueOf(queryRunner.query(sql,new ArrayHandler())[0])));
+            return queryByDemandId(Integer.parseInt(String.valueOf(queryRunner.query(sql,new ArrayHandler())[0])));
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
@@ -224,7 +211,6 @@ public class DemandDaompl implements IDemandDao {
 
     @Override
     public List<Demand> queryByEnterpriseIdAndConditionOfCertification(int enterpriseId, int conditionOfCertification) throws SQLException {
-        System.out.println("queryByEnterpriseIdAndConditionOfCertification("+enterpriseId+","+conditionOfCertification+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -235,8 +221,7 @@ public class DemandDaompl implements IDemandDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
@@ -244,7 +229,6 @@ public class DemandDaompl implements IDemandDao {
 
     @Override
     public boolean updateConditionsOfCertification(Demand demand, int conditionOfCertification) throws SQLException {
-        System.out.println("insert("+demand.getTitle()+","+demand.getIntroduction()+","+demand.getSpecificContent()+","+demand.getDemandUnits()+","+demand.getBudget()+","+demand.getTimeRequirement()+","+demand.getEnterpriseId()+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -255,8 +239,7 @@ public class DemandDaompl implements IDemandDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return false;
@@ -264,7 +247,6 @@ public class DemandDaompl implements IDemandDao {
 
     @Override
     public boolean updateConditionOfDemand(int demandId, int conditionOfDemand) throws SQLException {
-        System.out.println("updateConditionOfDemand("+demandId+","+conditionOfDemand+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -275,10 +257,27 @@ public class DemandDaompl implements IDemandDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return false;
+    }
+
+    @Override
+    public Object[] querySizeOfAllDemands() throws SQLException {
+        DataSource dataSource = null;
+        try {
+            dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
+            QueryRunner queryRunner = new QueryRunner(dataSource);
+            String sql="select COUNT(*) from demand";
+            return queryRunner.query(sql,new ArrayHandler());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if(dataSource!=null){
+                DbUtils.close(dataSource.getConnection());
+            }
+        }
+        return new Object[]{0};
     }
 }

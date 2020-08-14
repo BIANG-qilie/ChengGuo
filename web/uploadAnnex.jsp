@@ -23,7 +23,7 @@
         <tr></tr>
         <tr></tr>
         <tr>
-            <th colspan="5">上传附件</th>
+            <th colspan="5">附件上传</th>
         </tr>
         <tr>
             <th>

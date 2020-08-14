@@ -22,15 +22,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
+/**
+ * @author BIANG
+ * 不用 BaseServlet 是因为会提前使用迭代器，使指针指空
+ */
 @WebServlet("/uploadAnnex")
 
-//不用 BaseServlet 是因为会提前使用迭代器，使指针指空
 public class UploadAnnexServlet extends HttpServlet {
     IAnnexService annexService=new AnnexServiceImpl();
    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
         request.setCharacterEncoding("utf-8");
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html; charset=UTF-8");
@@ -39,7 +41,6 @@ public class UploadAnnexServlet extends HttpServlet {
         if(annexes==null){
             annexes=new ArrayList<>();
         }
-        User loginUser=(User)session.getAttribute("loginUser");
         Demand newDemand=(Demand) session.getAttribute("newDemand");
         String tip = null;
         try {
@@ -93,7 +94,7 @@ public class UploadAnnexServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
         doGet(request, response);
     }
 

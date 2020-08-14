@@ -5,6 +5,7 @@ import com.biang.www.po.Demand;
 import com.biang.www.po.Enterprise;
 import com.biang.www.po.User;
 import com.biang.www.util.JDBCUtils;
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
@@ -16,7 +17,6 @@ import java.util.List;
 public class EnterpriseDaoImpl implements IEnterpriseDao {
     @Override
     public Enterprise queryByEnterpriseId(int enterpriseId) throws SQLException {
-        System.out.println("queryByEnterpriseId("+enterpriseId+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -27,8 +27,7 @@ public class EnterpriseDaoImpl implements IEnterpriseDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
@@ -36,7 +35,6 @@ public class EnterpriseDaoImpl implements IEnterpriseDao {
 
     @Override
     public Enterprise queryByUserId(int userId) throws SQLException {
-        System.out.println("queryByUserId("+userId+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -47,8 +45,7 @@ public class EnterpriseDaoImpl implements IEnterpriseDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
@@ -56,7 +53,6 @@ public class EnterpriseDaoImpl implements IEnterpriseDao {
 
     @Override
     public boolean insert(Enterprise enterprise) throws SQLException {
-        System.out.println("insert("+enterprise.getEnterpriseName()+","+enterprise.getInformation()+","+enterprise.getContactPerson()+","+enterprise.getUserId()+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -67,8 +63,7 @@ public class EnterpriseDaoImpl implements IEnterpriseDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return false;
@@ -76,7 +71,6 @@ public class EnterpriseDaoImpl implements IEnterpriseDao {
 
     @Override
     public List<Enterprise> queryAllEnterprise() throws SQLException {
-        System.out.println("queryAllEnterprise()");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -87,8 +81,7 @@ public class EnterpriseDaoImpl implements IEnterpriseDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return null;
@@ -96,7 +89,6 @@ public class EnterpriseDaoImpl implements IEnterpriseDao {
 
     @Override
     public boolean updateConditionsOfCertification(Enterprise enterprise, int conditionsOfCertification) throws SQLException {
-        System.out.println("updateConditionsOfCertification("+conditionsOfCertification+","+enterprise.getEnterpriseId()+")");
         DataSource dataSource = null;
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
@@ -107,8 +99,7 @@ public class EnterpriseDaoImpl implements IEnterpriseDao {
             e.printStackTrace();
         }finally {
             if(dataSource!=null){
-                dataSource.getConnection().close();
-                System.out.println("clone()");
+                DbUtils.close(dataSource.getConnection());
             }
         }
         return false;

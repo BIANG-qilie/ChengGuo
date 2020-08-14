@@ -54,6 +54,7 @@
                             if(loginUser.getLevel()==User.MANAGER) {
                                 out.write(" <a href=\"enterprise?method=certifyEnterprise\"> 企业审核</a>");
                             }
+                            out.write(" <a href=\"user?method=logout\">注销</a>");
                         }else {
                             out.write("游客，<a href=\"index.jsp\">点击这里登录</a>");
                         }
@@ -93,7 +94,7 @@
         }
         int pageNumber= Integer.parseInt((String) session.getAttribute("pageNumber"));
         List<Demand> demands= (List<Demand>) session.getAttribute("demands");
-        int sizeOfDemands=(int) session.getAttribute("sizeOfDemands");
+        int sizeOfAllDemands=(int) session.getAttribute("sizeOfAllDemands");
     %>
     <table align="center" border="1" width="800" height="300" cellspacing="0" id="table01">
         <tr>
@@ -102,7 +103,6 @@
             <th>简介</th>
             <th>发布企业</th>
         </tr>
-        <tr>              <th colspan="8">共找到<%=sizeOfDemands%>条需求</th>          </tr>
         <%
             if(demands!=null) {
                 for (int i = 0; i < DemandServlet.MAX_NUMBER_OF_MESSAGES; i++) {
