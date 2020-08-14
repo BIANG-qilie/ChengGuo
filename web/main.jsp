@@ -94,7 +94,6 @@
         }
         int pageNumber= Integer.parseInt((String) session.getAttribute("pageNumber"));
         List<Demand> demands= (List<Demand>) session.getAttribute("demands");
-        int sizeOfAllDemands=(int) session.getAttribute("sizeOfAllDemands");
     %>
     <table align="center" border="1" width="800" height="300" cellspacing="0" id="table01">
         <tr>
