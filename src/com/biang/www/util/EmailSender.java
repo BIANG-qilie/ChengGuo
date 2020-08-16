@@ -79,14 +79,6 @@ public class EmailSender {
     private String mailText = null;
     // 邮件的服务器域名
     private String mailHost = null;
-    public void textInitialization(){
-        mailFrom="2947296752@qq.com";
-        mailFromPassword="lxakfuebeogoddif";
-        mailTo="921097712@qq.com";
-        mailTittle="邮箱发送测试";
-        mailText="芜湖起飞";
-        mailHost="smtp.qq.com";
-    }
     public void send() throws MessagingException, GeneralSecurityException {
         //创建一个配置文件并保存
         Properties properties = new Properties();
@@ -144,8 +136,8 @@ public class EmailSender {
     }
 
     public void Initialization(User forgetPasswordUser,String checkCode){
-        mailFrom="2947296752@qq.com";
-        mailFromPassword="lxakfuebeogoddif";
+        mailFrom="发送的邮箱";
+        mailFromPassword="那一串代码，不是邮箱密码";
         mailTo=forgetPasswordUser.getEmail();
         mailTittle="成果交易系统找回密码";
         mailText=forgetPasswordUser.getUserName()+"，您好！<br/>" +
@@ -157,9 +149,9 @@ public class EmailSender {
         mailHost="smtp.qq.com";
     }
     public void errorReport(String errorContent, Object object) throws GeneralSecurityException, MessagingException {
-        mailFrom="2947296752@qq.com";
-        mailFromPassword="lxakfuebeogoddif";
-        mailTo="921097712@qq.com";
+        mailFrom="发送的邮箱";
+        mailFromPassword="那一串代码，不是邮箱密码";
+        mailTo="系统管理员邮箱";
         mailTittle="成果交易系统错误汇报——"+errorContent;
         mailText="biang，您好！<br/>" +
                 "项目发生错误<br/>" +

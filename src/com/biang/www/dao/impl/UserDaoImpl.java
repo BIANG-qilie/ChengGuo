@@ -22,7 +22,7 @@ public class UserDaoImpl implements IUserDao {
         try {
             dataSource=JDBCUtils.getDataSourceWIthDBCPByProperties();
             QueryRunner queryRunner = new QueryRunner(dataSource);
-            String sql="INSERT INTO user VALUES(default,?,?,default,?)";
+            String sql="INSERT INTO user VALUES(default,?,?,default,?,null)";
             return queryRunner.update(sql, user.getUserName(), user.getPassword(), user.getEmail()) > 0;
         } catch (Exception e) {
             e.printStackTrace();
